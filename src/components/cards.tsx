@@ -52,8 +52,14 @@ export function ConceptCard({ c }: { c: Concept }) {
   return (
     <Link href={`/build/${c.config.product}?idea=${c.slug}`} className="press group relative block overflow-hidden rounded-[1.4rem] bg-[radial-gradient(90%_70%_at_50%_40%,#1d1d24,#0b0b0e)] ring-1 ring-line">
       <span className="absolute left-3 top-3 z-10 rounded-full bg-red/15 px-2.5 py-1 font-tag text-[0.6rem] text-red ring-1 ring-red/40">Concept</span>
-      <DesignCanvas config={c.config} className="aspect-[5/4] w-full transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-[1.03]" maxDpr={1.5} />
-      <div className="flex items-end justify-between gap-3 px-4 pb-4">
+      {c.image ? (
+        <div className="aspect-[4/3] w-full overflow-hidden">
+          <img src={c.image} alt={c.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]" />
+        </div>
+      ) : (
+        <DesignCanvas config={c.config} className="aspect-[5/4] w-full transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-[1.03]" maxDpr={1.5} />
+      )}
+      <div className="flex items-end justify-between gap-3 px-4 pb-4 pt-4">
         <div>
           <h3 className="font-display text-xl font-extrabold leading-none">{c.title}</h3>
           <p className="mt-1 text-xs text-muted">{c.blurb}</p>

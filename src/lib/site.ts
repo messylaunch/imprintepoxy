@@ -2,9 +2,14 @@ export const site = {
   name: "Imprint Epoxy Design",
   short: "Imprint Epoxy",
   tagline: "Leave your mark. Seal it forever.",
-  // Drop a pour video at /public/media/hero.mp4 and set this to "/media/hero.mp4"
-  // to replace the animated hero with real footage (e.g. from Higgsfield).
-  heroVideo: null as string | null,
+  // Hero footage (generated with Higgsfield from the real Ponds table photo).
+  // Set to null to fall back to the animated CSS pour.
+  heroVideo: {
+    desktop: "/media/gen/hero-pour.mp4",
+    mobile: "/media/gen/hero-pour-mobile.mp4",
+    poster: "/media/gen/hero-pour-poster.webp",
+    posterMobile: "/media/gen/hero-pour-mobile-poster.webp",
+  } as { desktop: string; mobile: string; poster: string; posterMobile: string } | null,
   phone: "(555) 555-0123",
   email: "hello@imprintepoxy.com",
   instagram: "https://instagram.com/",

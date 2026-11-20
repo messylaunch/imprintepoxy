@@ -39,7 +39,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section kicker="Ideas we can pour" title="Steal an idea" sub="Concepts rendered with our builder. Tap one, swap in your own photo, done.">
+      <Section kicker="Ideas we can pour" title="Steal an idea" sub="What your piece could look like at home. Tap one, swap in your own photo, done.">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CONCEPTS.map((c) => (
             <ConceptCard key={c.slug} c={c} />
@@ -65,6 +65,21 @@ export default function Home() {
           ))}
         </div>
       </Section>
+
+      {/* watch it pour */}
+      <section className="relative mt-24 overflow-hidden">
+        <video src="/media/gen/broll-helmet-panel.mp4" poster="/media/bcu-helmet-panel.jpg" autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" />
+        <img src="/media/bcu-helmet-panel.jpg" alt="" className="absolute inset-0 hidden h-full w-full object-cover motion-reduce:block" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/75 to-ink/10" />
+        <div className="relative mx-auto max-w-7xl px-4 py-24 md:px-6 md:py-36">
+          <p className="font-tag text-xs text-red">Made by hand</p>
+          <h2 className="font-display mt-3 max-w-xl text-6xl font-black md:text-8xl">
+            <span className="chrome-text">Poured, not printed.</span>
+          </h2>
+          <p className="mt-4 max-w-md text-fg/80">Every piece gets a thick, glass-clear pour by hand, cures for days, and comes out deep enough to look wet forever.</p>
+          <Link href="/build" className="btn mt-8">Start yours</Link>
+        </div>
+      </section>
 
       {/* Imprint band */}
       <section className="mx-auto mt-24 max-w-7xl px-4 md:px-6">

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 
 /** Hero. Uses real pour footage if site.heroVideo is set, otherwise an animated
@@ -10,7 +11,7 @@ export function Hero() {
     <section className="relative isolate min-h-[100svh] overflow-hidden">
       <div className="absolute inset-0 -z-10">
         {site.heroVideo ? (
-          <video src={site.heroVideo} autoPlay muted loop playsInline className="h-full w-full object-cover" />
+          <HeroVideo v={site.heroVideo} />
         ) : (
           <PourBackdrop />
         )}
@@ -45,6 +46,27 @@ export function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+function HeroVideo({ v }: { v: NonNullable<typeof site.heroVideo> }) {
+  // pick the vertical cut on phones so the pour stays centered
+  const [mobile, setMobile] = useState<boolean | null>(null);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setMobile(mq.matches);
+    const f = () => setMobile(mq.matches);
+    mq.addEventListener("change", f);
+    return () => mq.removeEventListener("change", f);
+  }, []);
+  const poster = mobile ? v.posterMobile : v.poster;
+  return (
+    <div className="absolute inset-0">
+      <img src={mobile === null ? v.poster : poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      {mobile !== null && (
+        <video key={mobile ? "m" : "d"} src={mobile ? v.mobile : v.desktop} poster={poster} autoPlay muted loop playsInline preload="auto" className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden" />
+      )}
+    </div>
   );
 }
 
