@@ -1,9 +1,9 @@
 export function ago(d: Date) {
   const s = (Date.now() - d.getTime()) / 1000;
-  if (s < 60) return "now";
-  if (s < 3600) return `${Math.floor(s / 60)}m`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h`;
-  if (s < 86400 * 30) return `${Math.floor(s / 86400)}d`;
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
+  if (s < 86400 * 30) return `${Math.floor(s / 86400)}d ago`;
   return d.toLocaleDateString();
 }
 const SRC: Record<string, string> = { signup: "Account", chat: "Chat lead", checkout: "Buyer", request: "Request", seed: "Account" };

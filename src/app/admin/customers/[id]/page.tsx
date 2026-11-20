@@ -27,7 +27,7 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
             <Avatar name={u.name} />
             <div className="min-w-0">
               <h1 className="font-display truncate text-3xl font-black leading-none">{u.name}</h1>
-              <p className="mt-1 text-xs text-muted">{[u.city, u.state].filter(Boolean).join(", ") || "Location unknown"} · joined {ago(u.createdAt)} ago</p>
+              <p className="mt-1 text-xs text-muted">{[u.city, u.state].filter(Boolean).join(", ") || "Location unknown"} · joined {ago(u.createdAt)}</p>
             </div>
           </div>
           <div className="mt-3"><SourceBadge s={u.source} /></div>
@@ -39,7 +39,7 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
           <dl className="mt-4 space-y-1 text-sm">
             <div className="flex justify-between gap-3"><dt className="text-muted">Email</dt><dd className="truncate">{u.email}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-muted">Phone</dt><dd>{u.phone ?? "—"}</dd></div>
-            <div className="flex justify-between gap-3"><dt className="text-muted">Last seen</dt><dd>{ago(u.lastSeenAt)} ago</dd></div>
+            <div className="flex justify-between gap-3"><dt className="text-muted">Last seen</dt><dd>{ago(u.lastSeenAt)}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-muted">Lifetime</dt><dd>{money(u.orders.reduce((a, o) => a + o.total, 0))}</dd></div>
           </dl>
           <ViewAsButton userId={u.id} name={u.name} />
@@ -56,7 +56,7 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
               <div key={p.id} className="panel p-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-display text-2xl font-extrabold">{p.name}</h3>
-                  <span className="text-xs text-muted">updated {ago(p.updatedAt)} ago</span>
+                  <span className="text-xs text-muted">updated {ago(p.updatedAt)}</span>
                 </div>
                 <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto">
                   {p.designs.map((d) => {

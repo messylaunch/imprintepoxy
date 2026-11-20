@@ -76,34 +76,27 @@ function PourBackdrop() {
   );
 }
 
-/** Candy-red drips hanging from the top edge, like the logo. */
+/** Candy-red drips hanging from the top edge, like the logo. Fixed pixel widths so they never stretch. */
 function Drips() {
   const drips = [
     { x: 6, h: 70, d: 0 }, { x: 14, h: 120, d: 0.4 }, { x: 23, h: 50, d: 1.1 }, { x: 37, h: 95, d: 0.2 },
     { x: 52, h: 150, d: 0.8 }, { x: 64, h: 60, d: 1.4 }, { x: 76, h: 110, d: 0.5 }, { x: 88, h: 80, d: 1.0 }, { x: 95, h: 45, d: 0.3 },
   ];
+  const candy = "linear-gradient(90deg,#8a0000,#ff2a2a 45%,#ff8080 60%,#9a0000)";
   return (
-    <svg className="pointer-events-none absolute inset-x-0 top-0 h-48 w-full opacity-90" preserveAspectRatio="none" viewBox="0 0 100 48" aria-hidden>
-      <defs>
-        <linearGradient id="dripg" x1="0" x2="1">
-          <stop offset="0" stopColor="#8a0000" />
-          <stop offset=".45" stopColor="#ff2a2a" />
-          <stop offset=".6" stopColor="#ff7a7a" />
-          <stop offset="1" stopColor="#9a0000" />
-        </linearGradient>
-      </defs>
-      <rect x="0" y="0" width="100" height="1.4" fill="url(#dripg)" />
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-48" aria-hidden>
+      <div className="absolute inset-x-0 top-0 h-[5px]" style={{ background: "linear-gradient(180deg,#ff3a3a,#9a0000)" }} />
       {drips.map((d, i) => (
-        <g key={i} className="drip" style={{ animationDelay: `${d.d}s`, transformOrigin: `${d.x}px 0px` }}>
-          <rect x={d.x - 0.35} y="0" width="0.7" height={d.h / 4} rx="0.35" fill="url(#dripg)" />
-          <ellipse cx={d.x} cy={d.h / 4} rx="0.65" ry="0.9" fill="url(#dripg)" />
-        </g>
+        <div key={i} className="drip absolute top-0 flex flex-col items-center" style={{ left: `${d.x}%`, animationDelay: `${d.d}s` }}>
+          <div className="w-[7px] rounded-b-full" style={{ height: d.h, background: candy }} />
+          <div className="-mt-2 h-[13px] w-[11px] rounded-full" style={{ background: candy, boxShadow: "inset 2px 2px 2px rgba(255,255,255,.45)" }} />
+        </div>
       ))}
       <style>{`
-        .drip { animation: drip 6s cubic-bezier(.5,0,.2,1) infinite; }
+        .drip { transform-origin: top; animation: drip 6s cubic-bezier(.5,0,.2,1) infinite; }
         @keyframes drip { 0% { transform: scaleY(0.05) } 60% { transform: scaleY(1) } 100% { transform: scaleY(1.04) } }
         @media (prefers-reduced-motion: reduce) { .drip { animation: none } }
       `}</style>
-    </svg>
+    </div>
   );
 }
