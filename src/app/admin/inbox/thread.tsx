@@ -47,7 +47,7 @@ export function StaffThread({ id, initial, compact }: { id: string; initial: Msg
         {msgs.map((m) => (
           <div key={m.id} className={`flex ${m.fromStaff ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[78%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm ${m.fromStaff ? "rounded-br-md text-white" : "rounded-bl-md bg-white/[0.07]"}`} style={m.fromStaff ? { background: "var(--candy)" } : undefined}>
-              <span className="mb-0.5 block text-[10px] opacity-70">{m.authorName} · {new Date(m.createdAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span>
+              <span suppressHydrationWarning className="mb-0.5 block text-[10px] opacity-70">{m.authorName} · {new Date(m.createdAt).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</span>
               {m.attachmentId ? <a href={`/api/uploads/${m.attachmentId}`} target="_blank"><img src={`/api/uploads/${m.attachmentId}`} alt="" className="max-h-48 rounded-lg" /></a> : m.body}
             </div>
           </div>
