@@ -16,6 +16,7 @@ export function Hero() {
         )}
         <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,transparent_30%,#08080a_88%)]" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink via-ink/70 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/85 via-black/40 to-transparent" />
       </div>
       <Drips />
 
