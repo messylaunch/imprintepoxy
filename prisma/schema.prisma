@@ -1,7 +1,8 @@
 // Local dev: SQLite. Production: switch provider to "postgresql" (Supabase/Neon)
 // and point DATABASE_URL at it, then run `npx prisma db push`.
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {

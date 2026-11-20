@@ -30,6 +30,14 @@ npm run dev               # http://localhost:3000
 | Owner dashboard: customers/leads, view-as-customer, inbox, orders | `src/app/admin` |
 | Imprint bio, event QR code | `src/app/imprint`, `src/app/qr` |
 
+## Deploy to Vercel (demo)
+
+1. vercel.com → **Add New → Project** → import `messylaunch/imprintepoxy`. Framework is detected as Next.js. Keep the defaults.
+2. Under **Environment Variables**, add `AUTH_SECRET` (any long random string). Optional but recommended.
+3. **Deploy.**
+
+With no database connected, the site runs on a bundled, pre-seeded demo database (`prisma/demo.db`). Everything works, but **data resets** whenever Vercel spins up a fresh server. Rebuild it with `npm run demo-db`. Connect Postgres (below) before taking real orders.
+
 ## Going live
 
 - **Database:** switch `provider` in `prisma/schema.prisma` to `postgresql`, point `DATABASE_URL` at Supabase/Neon, run `npx prisma db push && npm run db:seed`.
