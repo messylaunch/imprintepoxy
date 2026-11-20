@@ -41,7 +41,7 @@ async function main() {
   ], 1);
   await mk(marcus.id, "Family Picture", [
     ["Gold family table", cfg("table", { size: "round", imageUrl: "/media/ponds-top.jpg", flake: "gold", effects: ["goldflake"], frame: "gold" }), true],
-    ["Grandma's wall piece", cfg("wall", { size: "18x24", orientation: "portrait", imageUrl: "/media/ponds-top.jpg", effects: ["sparkle", "holo"] })],
+    ["Grandma's wall piece", cfg("wall", { size: "18x24", orientation: "portrait", imageUrl: "/media/ponds-top.jpg", effects: ["holo"] })],
   ], 2);
   const dreProj = await mk(dre.id, "Classic Weekend", [["Star helmet", cfg("helmet", { size: "m", imageUrl: "/media/cowboys-helmet.jpg", flake: "silver", frame: "black", transform: { x: 0.02, y: 0.02, scale: 1.12, rotation: 0 } })]], 2);
 

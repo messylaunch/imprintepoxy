@@ -8,8 +8,8 @@ export default function Imprint() {
     <div className="mx-auto max-w-5xl px-4 pt-28 md:px-6">
       <div className="relative">
         <img src="/media/logo.webp" alt="Imprint" className="pointer-events-none absolute -right-10 -top-16 w-[420px] opacity-25 md:-right-24 md:w-[560px]" />
-        <p className="font-tag text-xs text-red">Supported by Imprint</p>
-        <h1 className="font-display relative mt-2 text-6xl font-black md:text-8xl">
+        <p className="text-sm text-muted">Supported by Imprint</p>
+        <h1 className="font-display relative mt-2 text-5xl md:text-6xl">
           <span className="chrome-text block">Leave an imprint,</span>
           <span className="red-text block">not just a mark.</span>
         </h1>
@@ -33,7 +33,7 @@ export default function Imprint() {
         ].map((x) => (
           <div key={x.t} className="panel p-5">
             <x.icon className="text-red" />
-            <h3 className="font-display mt-3 text-3xl font-extrabold">{x.t}</h3>
+            <h3 className="font-display mt-3 text-3xl ">{x.t}</h3>
             <p className="mt-1 text-sm text-muted">{x.d}</p>
           </div>
         ))}

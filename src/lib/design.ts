@@ -101,7 +101,7 @@ export const FLAKES: { id: string; label: string; color: string[] }[] = [
   { id: "none", label: "Clear", color: [] },
   { id: "silver", label: "Silver", color: ["#ffffff", "#d7dce2", "#9aa3ad"] },
   { id: "gold", label: "Gold", color: ["#fff1b8", "#f5c542", "#c98a14"] },
-  { id: "red", label: "Candy Red", color: ["#ff8a8a", "#ff1f1f", "#a30000"] },
+  { id: "red", label: "Candy Red", color: ["#ff8a8a", "#e5242b", "#a30000"] },
   { id: "holo", label: "Holographic", color: ["#7cf7ff", "#ff7cf2", "#fff27c", "#8cff7c"] },
 ];
 

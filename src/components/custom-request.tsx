@@ -44,7 +44,7 @@ export function CustomRequest({ projects }: { projects: { id: string; name: stri
             <div className="mx-auto grid h-16 w-16 place-items-center rounded-full" style={{ background: "var(--candy)" }}>
               <Check />
             </div>
-            <h1 className="font-display mt-6 text-5xl font-black">Request sent</h1>
+            <h1 className="font-display mt-6 text-4xl">Request sent</h1>
             <p className="mx-auto mt-3 max-w-md text-muted">We'll look at your pieces and get back to you with ideas and a quote. You can keep chatting with us from the bubble in the corner.</p>
             <div className="mt-8 flex justify-center gap-3">
               <Link href="/build" className="btn btn-ghost">Build something else</Link>
@@ -54,8 +54,8 @@ export function CustomRequest({ projects }: { projects: { id: string; name: stri
         ) : (
           <motion.form key="form" onSubmit={submit} exit={{ opacity: 0, y: -10 }} className="stagger space-y-8">
             <div>
-              <p className="font-tag text-xs text-red">Special request</p>
-              <h1 className="font-display mt-2 text-6xl font-black md:text-7xl">
+              <p className="text-sm text-muted">Special request</p>
+              <h1 className="font-display mt-2 text-5xl md:text-6xl">
                 <span className="chrome-text">Got something wild?</span>
               </h1>
               <p className="mt-3 text-sm text-muted">Upload your pieces, photos or sketches. Tell us the idea. We'll work it out together.</p>

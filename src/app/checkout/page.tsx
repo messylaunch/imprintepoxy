@@ -47,7 +47,7 @@ export default function Checkout() {
   if (!cart.lines.length)
     return (
       <div className="mx-auto max-w-xl px-4 pt-32 text-center">
-        <h1 className="font-display text-5xl font-black">Nothing to check out</h1>
+        <h1 className="font-display text-4xl">Nothing to check out</h1>
         <Link href="/shop" className="btn mt-6">Go shopping</Link>
       </div>
     );
@@ -56,8 +56,8 @@ export default function Checkout() {
     <form onSubmit={pay} className="mx-auto grid max-w-6xl gap-8 px-4 pt-24 md:grid-cols-[1fr_380px] md:px-6">
       <div className="space-y-8">
         <div>
-          <p className="font-tag text-xs text-red">Checkout</p>
-          <h1 className="font-display mt-2 text-6xl font-black"><span className="chrome-text">Lock it in</span></h1>
+          <p className="text-sm text-muted">Checkout</p>
+          <h1 className="font-display mt-2 text-5xl"><span className="chrome-text">Lock it in</span></h1>
           <div className="mt-4 flex items-center gap-2 rounded-2xl bg-gold/10 px-4 py-3 text-xs text-gold ring-1 ring-gold/30">
             <Wand2 size={14} /> Practice mode. No real charge. Use the test card button below.
           </div>
@@ -116,7 +116,7 @@ export default function Checkout() {
 
       <div className="h-fit md:sticky md:top-24">
         <div className="panel p-5">
-          <h2 className="font-display text-3xl font-black">Order</h2>
+          <h2 className="font-display text-2xl">Order</h2>
           <div className="mt-4 space-y-3">
             {cart.lines.map((l) => (
               <div key={l.id} className="flex items-center gap-3">
@@ -135,7 +135,7 @@ export default function Checkout() {
             <Row k="Tax (est.)" v={money(totals.tax)} />
             <div className="flex items-end justify-between pt-2">
               <span className="font-tag text-xs text-muted">Total</span>
-              <span className="font-display text-4xl font-black">{money(totals.total)}</span>
+              <span className="font-display text-3xl">{money(totals.total)}</span>
             </div>
           </div>
           {err && <p className="mt-3 rounded-xl bg-red/10 px-3 py-2 text-sm text-red ring-1 ring-red/30">{err}</p>}
@@ -152,7 +152,7 @@ export default function Checkout() {
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="mb-3 flex items-center gap-3 font-display text-3xl font-black">
+      <h2 className="mb-3 flex items-center gap-3 font-display text-2xl">
         <span className="grid h-8 w-8 place-items-center rounded-full text-sm" style={{ background: "var(--candy)" }}>{n}</span>
         {title}
       </h2>

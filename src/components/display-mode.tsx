@@ -123,7 +123,7 @@ export function DisplayMode({ project, designs: initial, start }: { project: { i
         </Link>
         <div className="min-w-0 flex-1">
           <p className="font-tag truncate text-[0.62rem] text-muted">{project.name}</p>
-          <p className="font-display truncate text-2xl font-extrabold leading-none">{d.name}</p>
+          <p className="truncate text-lg font-semibold">{d.name}</p>
         </div>
         <span className="font-tag rounded-full bg-white/10 px-3 py-1.5 text-xs tabular-nums">
           {i + 1} / {designs.length}
@@ -176,13 +176,13 @@ export function DisplayMode({ project, designs: initial, start }: { project: { i
         <div className="mb-3 flex justify-center gap-1.5">
           {designs.map((x, k) => (
             <button key={x.id} onClick={() => go(k)} className="p-1" aria-label={`Design ${k + 1}`}>
-              <span className={`block h-1.5 rounded-full transition-all duration-300 ${k === i ? "w-6 bg-red shadow-[0_0_8px_#ff1f1f]" : "w-1.5 bg-white/30"}`} />
+              <span className={`block h-1.5 rounded-full transition-all duration-300 ${k === i ? "w-6 bg-red" : "w-1.5 bg-white/30"}`} />
             </button>
           ))}
         </div>
         <div className="mb-3 flex items-center justify-between text-sm">
           <span className="truncate text-muted">{describe(d.config).slice(0, 2).join(" · ")}</span>
-          <span className="font-display shrink-0 text-3xl font-black">{money(d.price)}</span>
+          <span className="font-display shrink-0 text-2xl">{money(d.price)}</span>
         </div>
         <div className="grid grid-cols-5 gap-2">
           <Action onClick={like} label={d.liked ? "Liked" : "Like"} active={d.liked}>

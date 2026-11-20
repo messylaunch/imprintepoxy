@@ -15,9 +15,9 @@ export default async function QR({ searchParams }: { searchParams: Promise<{ to?
   const png = await QRCode.toDataURL(url, { margin: 2, width: 1200, errorCorrectionLevel: "H" });
   return (
     <div className="mx-auto max-w-md px-4 pt-28 text-center">
-      <p className="font-tag text-xs text-red">For events & flyers</p>
-      <h1 className="font-display mt-2 text-6xl font-black"><span className="chrome-text">Scan to build</span></h1>
-      <div className="relative mx-auto mt-8 w-full max-w-sm rounded-[2rem] bg-white p-6 shadow-[0_0_80px_-20px_#ff1f1f]">
+      <p className="text-sm text-muted">For events & flyers</p>
+      <h1 className="font-display mt-2 text-5xl"><span className="chrome-text">Scan to build</span></h1>
+      <div className="relative mx-auto mt-8 w-full max-w-sm rounded-[2rem] bg-white p-6">
         <div dangerouslySetInnerHTML={{ __html: svg }} className="[&>svg]:h-auto [&>svg]:w-full" />
         <img src="/icon.png" alt="" className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-black p-1.5 ring-4 ring-white" />
       </div>

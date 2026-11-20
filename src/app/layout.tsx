@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource/big-shoulders-display/700";
-import "@fontsource/big-shoulders-display/800";
-import "@fontsource/big-shoulders-display/900";
-import "@fontsource/chakra-petch/500-italic";
-import "@fontsource/chakra-petch/600-italic";
-import "@fontsource/chakra-petch/600";
-import "@fontsource-variable/dm-sans";
+import "@fontsource-variable/geist";
+import "@fontsource/instrument-serif/400-italic";
+import "@fontsource/instrument-serif/400";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Nav, Footer, ImpersonationBanner } from "@/components/nav";

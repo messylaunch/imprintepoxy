@@ -26,7 +26,7 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
           <div className="flex items-center gap-3">
             <Avatar name={u.name} />
             <div className="min-w-0">
-              <h1 className="font-display truncate text-3xl font-black leading-none">{u.name}</h1>
+              <h1 className="font-display truncate text-2xl leading-none">{u.name}</h1>
               <p className="mt-1 text-xs text-muted">{[u.city, u.state].filter(Boolean).join(", ") || "Location unknown"} · joined {ago(u.createdAt)}</p>
             </div>
           </div>
@@ -49,13 +49,13 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
 
       <div className="space-y-8">
         <section>
-          <h2 className="font-display text-3xl font-black">Projects</h2>
+          <h2 className="font-display text-2xl">Projects</h2>
           {u.projects.length === 0 && <p className="mt-2 text-sm text-muted">No projects yet.</p>}
           <div className="mt-3 space-y-4">
             {u.projects.map((p) => (
               <div key={p.id} className="panel p-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-2xl font-extrabold">{p.name}</h3>
+                  <h3 className="text-lg font-semibold">{p.name}</h3>
                   <span className="text-xs text-muted">updated {ago(p.updatedAt)}</span>
                 </div>
                 <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto">
@@ -80,7 +80,7 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
         </section>
 
         <section>
-          <h2 className="font-display text-3xl font-black">Conversations</h2>
+          <h2 className="font-display text-2xl">Conversations</h2>
           {u.conversations.length === 0 && <p className="mt-2 text-sm text-muted">No messages yet.</p>}
           <div className="mt-3 space-y-4">
             {u.conversations.map((c) => (
@@ -93,7 +93,7 @@ export default async function Customer({ params }: { params: Promise<{ id: strin
         </section>
 
         <section>
-          <h2 className="font-display text-3xl font-black">Orders</h2>
+          <h2 className="font-display text-2xl">Orders</h2>
           {u.orders.length === 0 && <p className="mt-2 text-sm text-muted">No orders yet.</p>}
           <div className="mt-3 space-y-2">
             {u.orders.map((o) => (

@@ -78,7 +78,7 @@ export const CONCEPTS: Concept[] = [
   { slug: "gold-rush-round", title: "Gold Name Round Table", blurb: "Family name in gold leaf, round top.", image: "/media/gen/idea-round-gold.webp", config: c("table", { size: "round", imageUrl: "/media/ponds-top.jpg", effects: ["goldflake"], flake: "gold", frame: "black", transform: { x: 0, y: 0, scale: 1.05, rotation: 0 } }) },
   { slug: "maroon-gold-dining", title: "Maroon & Gold Dining", blurb: "School colors on the big table.", image: "/media/gen/idea-maroon-dining.webp", config: c("table", { size: "dining", imageUrl: "/media/bcu-helmet-panel.jpg", flake: "gold", frame: "black" }) },
   { slug: "sports-bar-helmet-trio", title: "Sports Bar Helmet Trio", blurb: "A row of helmets for the bar or shop.", image: "/media/gen/idea-helmet-trio.webp", config: c("helmet", { size: "m", imageUrl: "/media/bcu-helmet-panel.jpg", effects: ["neon"], frame: "gold", transform: { x: -0.08, y: 0, scale: 1.25, rotation: 0 } }) },
-  { slug: "family-portrait-wall", title: "Family Portrait Wall", blurb: "Your family photo with a holo shimmer.", image: "/media/gen/idea-family-wall.webp", config: c("wall", { size: "24x36", orientation: "portrait", imageUrl: null, effects: ["holo", "sparkle"] }) },
+  { slug: "family-portrait-wall", title: "Family Portrait Wall", blurb: "Your family photo with a holo shimmer.", image: "/media/gen/idea-family-wall.webp", config: c("wall", { size: "24x36", orientation: "portrait", imageUrl: null, effects: ["holo"] }) },
 ];
 
 export const findShop = (slug: string) => SHOP.find((s) => s.slug === slug);

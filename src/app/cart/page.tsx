@@ -9,14 +9,14 @@ export default function Cart() {
   const cart = useCart();
   return (
     <div className="mx-auto max-w-4xl px-4 pt-28 md:px-6">
-      <p className="font-tag text-xs text-red">Cart</p>
-      <h1 className="font-display mt-2 text-6xl font-black md:text-7xl">
+      <p className="text-sm text-muted">Cart</p>
+      <h1 className="font-display mt-2 text-5xl md:text-6xl">
         <span className="chrome-text">Your haul</span>
       </h1>
       {cart.lines.length === 0 ? (
         <div className="panel mt-10 p-10 text-center">
           <ShoppingBag className="mx-auto text-red" size={40} />
-          <h2 className="font-display mt-4 text-4xl font-black">Cart's empty</h2>
+          <h2 className="font-display mt-4 text-3xl">Cart's empty</h2>
           <p className="mt-2 text-sm text-muted">Your projects are saved separately, so you can add the one you love when you're ready.</p>
           <div className="mt-6 flex justify-center gap-3">
             <Link href="/shop" className="btn btn-ghost">Shop</Link>
@@ -33,8 +33,8 @@ export default function Cart() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-tag text-[0.6rem] text-red">{l.kind === "design" ? "Custom build" : "Finished piece"}</p>
-                        <h3 className="font-display truncate text-2xl font-extrabold leading-none">{l.title}</h3>
+                        <p className="text-xs text-muted">{l.kind === "design" ? "Custom build" : "Finished piece"}</p>
+                        <h3 className="truncate text-lg font-semibold">{l.title}</h3>
                       </div>
                       <button onClick={() => cart.remove(l.id)} className="press text-muted hover:text-red" aria-label="Remove">
                         <Trash2 size={16} />
@@ -47,7 +47,7 @@ export default function Cart() {
                         <span className="w-6 text-center text-sm tabular-nums">{l.qty}</span>
                         <button className="press grid h-7 w-7 place-items-center rounded-full hover:bg-white/10" onClick={() => cart.setQty(l.id, l.qty + 1)} aria-label="More"><Plus size={13} /></button>
                       </div>
-                      <span className="font-display text-2xl font-black">{money(l.price * l.qty)}</span>
+                      <span className="font-display text-xl">{money(l.price * l.qty)}</span>
                     </div>
                   </div>
                 </motion.div>

@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="mx-auto max-w-7xl px-4 pt-20 md:px-6">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-tag text-xs text-red">Owner dashboard</p>
+          <p className="text-sm text-muted">Owner dashboard</p>
           <p className="text-sm text-muted">Signed in as {staff.name} ({staff.role.toLowerCase()})</p>
         </div>
         <Link href="/" className="font-tag text-xs text-muted hover:text-fg">View site →</Link>

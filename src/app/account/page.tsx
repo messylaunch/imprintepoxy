@@ -24,8 +24,8 @@ export default async function Account() {
     <div className="mx-auto max-w-5xl px-4 pt-28 md:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-tag text-xs text-red">My account</p>
-          <h1 className="font-display mt-2 text-6xl font-black md:text-7xl"><span className="chrome-text">{u.name}</span></h1>
+          <p className="text-sm text-muted">My account</p>
+          <h1 className="font-display mt-2 text-5xl md:text-6xl"><span className="chrome-text">{u.name}</span></h1>
           <p className="mt-2 text-sm text-muted">{u.email}{u.phone && ` · ${u.phone}`}{u.state && ` · ${u.state}`}</p>
         </div>
         <div className="flex gap-2">
@@ -37,14 +37,14 @@ export default async function Account() {
       {!u.passwordHash && !s.impersonating && (
         <div className="panel mt-8 grid gap-6 p-6 md:grid-cols-2">
           <div>
-            <h2 className="font-display text-3xl font-black">Set a password</h2>
+            <h2 className="font-display text-2xl">Set a password</h2>
             <p className="mt-1 text-sm text-muted">So you can sign in from any device and keep your projects. Use the same email: {u.email}</p>
           </div>
           <AuthForm />
         </div>
       )}
 
-      <h2 className="font-display mt-12 flex items-center gap-2 text-4xl font-black"><Package className="text-red" /> Orders</h2>
+      <h2 className="font-display mt-12 flex items-center gap-2 text-3xl"><Package className="text-red" /> Orders</h2>
       {orders.length === 0 ? (
         <p className="mt-3 text-sm text-muted">No orders yet.</p>
       ) : (
@@ -57,14 +57,14 @@ export default async function Account() {
               </span>
               <span className="flex items-center gap-4">
                 <span className="rounded-full bg-white/5 px-3 py-1 font-tag text-[0.6rem] ring-1 ring-white/10">{STATUS[o.status] ?? o.status}</span>
-                <span className="font-display text-2xl font-black">{money(o.total)}</span>
+                <span className="font-display text-xl">{money(o.total)}</span>
               </span>
             </Link>
           ))}
         </div>
       )}
 
-      <h2 className="font-display mt-12 flex items-center gap-2 text-4xl font-black"><FolderHeart className="text-red" /> Projects</h2>
+      <h2 className="font-display mt-12 flex items-center gap-2 text-3xl"><FolderHeart className="text-red" /> Projects</h2>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {projects.map((p) => (
           <Link key={p.id} href={`/projects/${p.id}`} className="panel press flex items-center justify-between p-4">

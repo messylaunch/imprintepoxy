@@ -59,7 +59,7 @@ export default async function Customers({ searchParams }: { searchParams: Promis
               <span className="min-w-0">
                 <span className="flex items-center gap-2 truncate text-sm font-semibold">
                   {u.name}
-                  {u.conversations.length > 0 && <span className="h-2 w-2 rounded-full bg-red shadow-[0_0_8px_#ff1f1f]" title="Unread message" />}
+                  {u.conversations.length > 0 && <span className="h-2 w-2 rounded-full bg-red" title="Unread message" />}
                 </span>
                 <span className="block truncate text-xs text-muted">{u.email}</span>
               </span>

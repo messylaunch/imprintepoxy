@@ -47,6 +47,7 @@ export async function POST(req: Request) {
       items.push({ kind: "shop", slug: s.slug, title: s.title, qty, price: s.price, thumb: s.image, details: [s.size] });
     } else {
       if (!l.config || !["table", "helmet", "wall"].includes(l.config.product)) return fail("A design in your cart is broken");
+      l.config.effects = Array.isArray(l.config.effects) ? l.config.effects.slice(0, 1) : [];
       items.push({ kind: "design", designId: l.designId ?? null, title: clean(l.title, 80) || "Custom design", qty, price: priceOf(l.config), thumb: l.thumb?.startsWith("data:image") && l.thumb.length < 400_000 ? l.thumb : null, config: l.config, details: describe(l.config) });
     }
   }

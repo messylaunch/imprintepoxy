@@ -52,12 +52,12 @@ export function ProjectView({ project, designs: initial }: { project: { id: stri
       </Link>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-tag text-xs text-red">Project · {designs.length} design{designs.length === 1 ? "" : "s"}</p>
+          <p className="text-sm text-muted">Project · {designs.length} design{designs.length === 1 ? "" : "s"}</p>
           {editing ? (
-            <input autoFocus className="font-display mt-2 w-full bg-transparent text-6xl font-black uppercase outline-none md:text-7xl" value={name} onChange={(e) => setName(e.target.value)} onBlur={rename} onKeyDown={(e) => e.key === "Enter" && rename()} />
+            <input autoFocus className="font-display mt-2 w-full bg-transparent text-5xl uppercase outline-none md:text-7xl" value={name} onChange={(e) => setName(e.target.value)} onBlur={rename} onKeyDown={(e) => e.key === "Enter" && rename()} />
           ) : (
             <button onClick={() => setEditing(true)} className="group mt-2 flex items-center gap-3 text-left">
-              <h1 className="font-display text-6xl font-black md:text-7xl">{name}</h1>
+              <h1 className="font-display text-5xl md:text-6xl">{name}</h1>
               <Pencil size={18} className="text-muted opacity-0 transition group-hover:opacity-100" />
             </button>
           )}
@@ -84,7 +84,7 @@ export function ProjectView({ project, designs: initial }: { project: { id: stri
             <div className="p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="font-display truncate text-2xl font-extrabold leading-none">{d.name}</h3>
+                  <h3 className="truncate text-lg font-semibold">{d.name}</h3>
                   <p className="mt-1 truncate text-xs text-muted">{describe(d.config).slice(0, 3).join(" · ")}</p>
                 </div>
                 <button onClick={() => like(d)} className="press grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/5" aria-label="Favorite">
@@ -92,7 +92,7 @@ export function ProjectView({ project, designs: initial }: { project: { id: stri
                 </button>
               </div>
               <div className="mt-4 flex items-center gap-2">
-                <span className="font-display mr-auto text-2xl font-black">{money(d.price)}</span>
+                <span className="font-display mr-auto text-xl">{money(d.price)}</span>
                 <button onClick={() => remove(d)} className="press grid h-9 w-9 place-items-center rounded-full text-muted hover:text-red" aria-label="Delete">
                   <Trash2 size={16} />
                 </button>
@@ -119,7 +119,7 @@ export function ProjectView({ project, designs: initial }: { project: { id: stri
               <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.12 } }} transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }} className="absolute inset-0 grid gap-2 rounded-[1.6rem] bg-ink-3 p-4 ring-1 ring-red/40">
                 {(Object.keys(PRODUCTS) as ProductType[]).map((t) => (
                   <Link key={t} href={`/build/${t}?project=${project.id}`} className="press flex items-center justify-between rounded-2xl bg-white/5 px-4 text-left ring-1 ring-white/10 hover:bg-white/10">
-                    <span className="font-display text-2xl font-extrabold">{PRODUCTS[t].name}</span>
+                    <span className="text-lg font-semibold">{PRODUCTS[t].name}</span>
                     <span className="text-xs text-muted">from {money(PRODUCTS[t].sizes[0].price)}</span>
                   </Link>
                 ))}

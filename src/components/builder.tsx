@@ -22,7 +22,7 @@ type Props = {
 const STEPS = [
   { id: "pick", label: "Pick it", title: "Size & style" },
   { id: "make", label: "Make it yours", title: "Your image" },
-  { id: "seal", label: "Seal it", title: "Choose your pour" },
+  { id: "seal", label: "Finish it", title: "Finish & overlay" },
   { id: "lock", label: "Lock it in", title: "Review" },
 ];
 
@@ -205,7 +205,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
             {STEPS.map((s, i) => (
               <button key={s.id} onClick={() => go(i)} className="group min-w-0 flex-1 text-left">
                 <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-                  <motion.div className="h-full origin-left rounded-full" style={{ background: "var(--candy)", boxShadow: "0 0 10px #ff1f1f" }} initial={false} animate={{ scaleX: i <= step ? 1 : 0 }} transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }} />
+                  <motion.div className="h-full origin-left rounded-full" style={{ background: "var(--color-fg)" }} initial={false} animate={{ scaleX: i <= step ? 1 : 0 }} transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }} />
                 </div>
                 <span className={`font-tag mt-1 hidden truncate text-[0.62rem] sm:block ${i === step ? "text-fg" : "text-muted"}`}>
                   {i + 1}. {s.label}
@@ -213,7 +213,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
               </button>
             ))}
           </div>
-          <motion.div key={price} initial={{ y: -6, opacity: 0.4 }} animate={{ y: 0, opacity: 1 }} className="font-display shrink-0 text-2xl font-black md:text-3xl">
+          <motion.div key={price} initial={{ y: -6, opacity: 0.4 }} animate={{ y: 0, opacity: 1 }} className="font-display shrink-0 text-xl md:text-3xl">
             {money(price)}
           </motion.div>
         </div>
@@ -262,8 +262,8 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
               exit="exit"
               transition={{ duration: 0.32, ease: [0.23, 1, 0.32, 1] }}
             >
-              <p className="font-tag text-xs text-red">Step {step + 1} of 4</p>
-              <h1 className="font-display mt-1 text-5xl font-black md:text-6xl">{STEPS[step].title}</h1>
+              <p className="text-sm text-muted">Step {step + 1} of 4</p>
+              <h1 className="font-display mt-1 text-4xl md:text-5xl">{STEPS[step].title}</h1>
 
               {step === 0 && (
                 <div className="mt-6 space-y-8">
@@ -271,7 +271,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                     <div className="grid grid-cols-2 gap-2">
                       {P.sizes.map((s) => (
                         <button key={s.id} data-on={cfg.size === s.id} onClick={() => set({ size: s.id })} className="chip p-4 text-left">
-                          <div className="font-display text-2xl font-extrabold leading-none">{s.label}</div>
+                          <div className="text-lg font-semibold leading-tight">{s.label}</div>
                           <div className="mt-1 text-xs text-muted">{s.dims}</div>
                           <div className="mt-3 text-sm font-semibold">{money(s.price)}</div>
                           {cfg.size === s.id && <Check size={16} className="absolute right-3 top-3 text-red" />}
@@ -338,7 +338,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                     <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
                       {FILTERS.map((f) => (
                         <button key={f.id} onClick={() => set({ filter: f.id })} className="press shrink-0 text-center">
-                          <div className={`h-16 w-16 overflow-hidden rounded-2xl ring-2 transition ${cfg.filter === f.id ? "ring-red shadow-[0_0_20px_-4px_#ff1f1f]" : "ring-white/10"}`}>
+                          <div className={`h-16 w-16 overflow-hidden rounded-2xl ring-2 transition ${cfg.filter === f.id ? "ring-red" : "ring-white/10"}`}>
                             <img src={cfg.imageUrl ?? "/media/ponds-top.jpg"} alt="" className="h-full w-full object-cover" style={{ filter: f.css }} />
                           </div>
                           <span className={`mt-1 block text-[11px] ${cfg.filter === f.id ? "text-fg" : "text-muted"}`}>{f.label}</span>
@@ -347,20 +347,6 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                     </div>
                   </Group>
 
-                  <Group label="Effects · stack as many as you like">
-                    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                      {EFFECTS.map((e) => {
-                        const on = cfg.effects.includes(e.id);
-                        return (
-                          <button key={e.id} data-on={on} onClick={() => set({ effects: on ? cfg.effects.filter((x) => x !== e.id) : [...cfg.effects, e.id] })} className="chip px-2 py-3 text-center">
-                            <FxIcon id={e.id} />
-                            <div className="mt-1.5 text-xs font-semibold">{e.label}</div>
-                            <div className="text-[10px] text-muted">{e.hint}</div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </Group>
                 </div>
               )}
 
@@ -372,7 +358,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                         <button key={t.id} data-on={cfg.topcoat === t.id} onClick={() => set({ topcoat: t.id })} className="chip flex items-center gap-4 p-4 text-left">
                           <span className="h-12 w-12 shrink-0 rounded-xl ring-1 ring-white/15" style={{ background: t.id === "gloss" ? "linear-gradient(135deg,#444 0%,#111 45%,#fff 50%,#222 56%,#111 100%)" : t.id === "satin" ? "linear-gradient(135deg,#3a3a40,#1a1a1f 60%,#2c2c33)" : "#1d1d22" }} />
                           <div>
-                            <div className="font-display text-2xl font-extrabold leading-none">{t.label}</div>
+                            <div className="text-lg font-semibold leading-tight">{t.label}</div>
                             <div className="mt-1 text-xs text-muted">{t.hint}</div>
                           </div>
                           {cfg.topcoat === t.id && <Check size={18} className="ml-auto text-red" />}
@@ -386,6 +372,19 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                       value={cfg.flake}
                       onChange={(v) => set({ flake: v })}
                     />
+                  </Group>
+                  <Group label="Overlay · pick one (optional)">
+                    <div className="grid grid-cols-4 gap-2">
+                      {[{ id: "none", label: "None", hint: "Just the pour" }, ...EFFECTS].map((e) => {
+                        const on = e.id === "none" ? cfg.effects.length === 0 : cfg.effects[0] === e.id;
+                        return (
+                          <button key={e.id} data-on={on} onClick={() => set({ effects: e.id === "none" ? [] : [e.id] })} className="chip px-2 py-3 text-center">
+                            <FxIcon id={e.id} />
+                            <div className="mt-1.5 text-xs font-medium">{e.label}</div>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </Group>
                 </div>
               )}
@@ -402,7 +401,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                     </ul>
                     <div className="flex items-center justify-between border-t border-line bg-white/[0.03] px-4 py-4">
                       <span className="font-tag text-xs text-muted">Total</span>
-                      <span className="font-display text-4xl font-black">{money(price)}</span>
+                      <span className="font-display text-3xl">{money(price)}</span>
                     </div>
                   </div>
 
@@ -511,7 +510,7 @@ function Slider({ label, min, max, step, value, onChange, fmt }: { label: string
   return (
     <label className="flex items-center gap-3 text-xs">
       <span className="w-12 text-muted">{label}</span>
-      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(parseFloat(e.target.value))} className="flex-1 accent-[#ff1f1f]" />
+      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(parseFloat(e.target.value))} className="flex-1 accent-[#e5242b]" />
       <span className="w-12 text-right tabular-nums">{fmt(value)}</span>
     </label>
   );
@@ -526,8 +525,9 @@ function FxIcon({ id }: { id: string }) {
     holo: "linear-gradient(135deg,#ff5ef7,#5ef1ff,#fff35e,#7bff5e)",
     neon: "#111",
     vignette: "radial-gradient(circle, #777 0 30%, #000 75%)",
+    none: "repeating-linear-gradient(45deg,#1c1c20 0 4px,#24242a 4px 8px)",
   };
-  return <span className="mx-auto block h-9 w-9 rounded-full ring-1 ring-white/15" style={{ background: bg[id], boxShadow: id === "neon" ? "inset 0 0 0 2px #ff1f1f, 0 0 14px #ff1f1f" : undefined }} />;
+  return <span className="mx-auto block h-9 w-9 rounded-full ring-1 ring-white/15" style={{ background: bg[id], boxShadow: id === "neon" ? "inset 0 0 0 2px #e5242b" : undefined }} />;
 }
 
 async function downscale(file: File, max: number): Promise<Blob> {

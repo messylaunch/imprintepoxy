@@ -15,11 +15,11 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
   const items = JSON.parse(o.items) as { title: string; qty: number; price: number; thumb?: string | null; details?: string[] }[];
   return (
     <div className="mx-auto max-w-2xl px-4 pt-28 text-center">
-      <div className="mx-auto grid h-20 w-20 place-items-center rounded-full shadow-[0_0_60px_-10px_#ff1f1f]" style={{ background: "var(--candy)" }}>
+      <div className="mx-auto grid h-20 w-20 place-items-center rounded-full" style={{ background: "var(--candy)" }}>
         <Check size={36} />
       </div>
-      <p className="font-tag mt-6 text-xs text-red">Order #{o.number}</p>
-      <h1 className="font-display mt-2 text-6xl font-black md:text-7xl"><span className="chrome-text">It's official.</span></h1>
+      <p className="mt-6 text-sm text-muted">Order #{o.number}</p>
+      <h1 className="font-display mt-2 text-5xl md:text-6xl"><span className="chrome-text">It's official.</span></h1>
       <p className="mx-auto mt-3 max-w-md text-muted">We got it. Custom pieces usually take 2–3 weeks to pour and cure. We'll text and email updates along the way.</p>
       <div className="panel mt-8 p-5 text-left">
         {items.map((i, k) => (
@@ -34,7 +34,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         ))}
         <div className="mt-3 flex justify-between border-t border-line pt-3">
           <span className="text-muted">Paid (practice) · card •••• {o.cardLast4}</span>
-          <span className="font-display text-3xl font-black">{money(o.total)}</span>
+          <span className="font-display text-2xl">{money(o.total)}</span>
         </div>
       </div>
       <div className="mt-8 flex justify-center gap-3">

@@ -112,10 +112,10 @@ export function Providers({ user: initialUser, children }: { user: PublicUser | 
                   transition={{ type: "spring", duration: 0.45, bounce: 0.2 }}
                   className="glass pointer-events-auto flex items-center gap-3 rounded-full px-4 py-2.5 text-sm shadow-2xl"
                 >
-                  <span className="h-2 w-2 rounded-full bg-red shadow-[0_0_10px_#ff1f1f]" />
+                  <span className="h-2 w-2 rounded-full bg-red" />
                   {t.text}
                   {t.action && (
-                    <a href={t.action.href} className="font-tag text-xs text-red">
+                    <a href={t.action.href} className="text-sm text-muted">
                       {t.action.label}
                     </a>
                   )}

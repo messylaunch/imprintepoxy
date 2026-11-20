@@ -16,8 +16,8 @@ export default async function Projects() {
     return (
       <div className="mx-auto grid max-w-5xl gap-10 px-4 pt-28 md:grid-cols-2 md:px-6">
         <div>
-          <p className="font-tag text-xs text-red">My projects</p>
-          <h1 className="font-display mt-2 text-6xl font-black md:text-7xl">
+          <p className="text-sm text-muted">My projects</p>
+          <h1 className="font-display mt-2 text-5xl md:text-6xl">
             <span className="chrome-text">Your ideas, saved.</span>
           </h1>
           <p className="mt-4 text-muted">Group designs into projects, like “Football Team” or “Family Table”, compare them side by side, swipe through them in display mode, and share with family before you buy.</p>
@@ -38,8 +38,8 @@ export default async function Projects() {
     <div className="mx-auto max-w-7xl px-4 pt-28 md:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-tag text-xs text-red">My projects</p>
-          <h1 className="font-display mt-2 text-6xl font-black md:text-8xl">
+          <p className="text-sm text-muted">My projects</p>
+          <h1 className="font-display mt-2 text-5xl md:text-6xl">
             <span className="chrome-text">Your ideas</span>
           </h1>
         </div>
@@ -48,7 +48,7 @@ export default async function Projects() {
       {projects.length === 0 ? (
         <div className="panel mt-10 p-10 text-center">
           <FolderHeart className="mx-auto text-red" size={40} />
-          <h2 className="font-display mt-4 text-4xl font-black">No projects yet</h2>
+          <h2 className="font-display mt-4 text-3xl">No projects yet</h2>
           <p className="mt-2 text-sm text-muted">Build a design and save it. It'll land here.</p>
           <Link href="/build" className="btn mt-6">
             <Plus size={16} /> Start building
@@ -70,7 +70,7 @@ export default async function Projects() {
                   })}
                 </div>
                 <div className="p-4">
-                  <h2 className="font-display text-3xl font-extrabold leading-none">{p.name}</h2>
+                  <h2 className="font-display text-2xl leading-tight">{p.name}</h2>
                   <p className="mt-1 text-xs text-muted">
                     {p.designs.length} design{p.designs.length === 1 ? "" : "s"}
                     {p.designs.length > 0 && ` · from ${money(Math.min(...p.designs.map((d) => d.price)))}`}

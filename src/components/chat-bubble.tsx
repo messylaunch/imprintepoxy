@@ -63,7 +63,7 @@ export function ChatBubble() {
       <motion.button
         onClick={() => setOpen((o) => !o)}
         className={`fixed bottom-24 right-4 z-[60] h-14 w-14 place-items-center rounded-full md:bottom-6 md:right-6 ${focused && !open ? "hidden md:grid" : "grid"}`}
-        style={{ background: "var(--candy)", boxShadow: "inset 0 1px 0 rgba(255,255,255,.5), 0 10px 30px -4px rgba(255,20,20,.6)" }}
+        style={{ background: "var(--color-red)", boxShadow: "0 8px 24px -8px rgba(0,0,0,.6)" }}
         whileTap={{ scale: 0.94 }}
         aria-label="Chat with us"
       >
@@ -88,7 +88,7 @@ export function ChatBubble() {
             {view.v === "home" && (
               <div className="overflow-y-auto p-5">
                 <img src="/media/logo-256.png" alt="" className="h-12" />
-                <h3 className="font-display mt-3 text-4xl font-black">Hey{user ? `, ${user.name.split(" ")[0]}` : ""} 👋</h3>
+                <h3 className="font-display mt-3 text-3xl">Hey{user ? `, ${user.name.split(" ")[0]}` : ""} 👋</h3>
                 <p className="mt-1 text-sm text-muted">What do you need help with?</p>
                 <div className="mt-5 grid gap-2">
                   <Option icon={HelpCircle} title="General question" sub="Pricing, timing, pickup, anything" onClick={() => setView({ v: "thread", id: null, topic: "general" })} />
@@ -100,7 +100,7 @@ export function ChatBubble() {
                     <div className="grid gap-1.5">
                       {convs.slice(0, 5).map((c) => (
                         <button key={c.id} onClick={() => setView({ v: "thread", id: c.id, topic: c.topic, projectName: c.project?.name })} className="press flex items-center gap-3 rounded-2xl bg-white/[0.03] p-3 text-left ring-1 ring-white/5 hover:bg-white/[0.06]">
-                          <span className={`h-2 w-2 shrink-0 rounded-full ${c.userUnread ? "bg-red shadow-[0_0_8px_#ff1f1f]" : "bg-white/20"}`} />
+                          <span className={`h-2 w-2 shrink-0 rounded-full ${c.userUnread ? "bg-red" : "bg-white/20"}`} />
                           <span className="min-w-0 flex-1">
                             <span className="block truncate text-sm font-semibold">{c.project ? c.project.name : c.topic === "custom" ? "Special request" : "General question"}</span>
                             <span className="block truncate text-xs text-muted">{c.messages[0]?.body}</span>
@@ -116,7 +116,7 @@ export function ChatBubble() {
             {view.v === "pick" && (
               <div className="overflow-y-auto p-5">
                 <BackBtn onClick={() => setView({ v: "home" })} />
-                <h3 className="font-display mt-3 text-3xl font-black">Which project?</h3>
+                <h3 className="font-display mt-3 text-2xl">Which project?</h3>
                 <div className="mt-4 grid gap-2">
                   {projects.map((p) => {
                     const existing = convs.find((c) => c.project?.id === p.id);

@@ -15,10 +15,10 @@ export default async function Orders() {
         return (
           <div key={o.id} id={o.id} className="panel scroll-mt-24 p-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="font-display text-3xl font-black">#{o.number}</span>
+              <span className="font-display text-2xl">#{o.number}</span>
               <Link href={`/admin/customers/${o.userId}`} className="text-sm font-semibold hover:text-red">{o.user.name}</Link>
               <span className="text-xs text-muted">{o.createdAt.toLocaleString()}</span>
-              <span className="ml-auto font-display text-2xl font-black">{money(o.total)}</span>
+              <span className="ml-auto font-display text-xl">{money(o.total)}</span>
               <StatusSelect id={o.id} status={o.status} />
             </div>
             <p className="mt-1 text-xs text-muted">{o.address === "Local pickup" ? "Local pickup" : `${o.shipName}, ${o.address}, ${o.city}, ${o.state} ${o.zip}`} · card •••• {o.cardLast4} (practice)</p>

@@ -23,10 +23,10 @@ export default async function Product({ params }: { params: Promise<{ slug: stri
       <div className="grid gap-8 md:grid-cols-[1.15fr_1fr] md:gap-12">
         <Gallery images={item.gallery} alt={item.title} />
         <div className="stagger md:sticky md:top-24 md:self-start">
-          <p className="font-tag text-xs text-red">{PRODUCTS[item.category].name}</p>
-          <h1 className="font-display mt-2 text-5xl font-black md:text-7xl">{item.title}</h1>
+          <p className="text-sm text-muted">{PRODUCTS[item.category].name}</p>
+          <h1 className="font-display mt-2 text-4xl md:text-5xl">{item.title}</h1>
           <p className="mt-2 text-sm text-muted">{item.size}</p>
-          <p className="font-display mt-6 text-5xl font-black">{money(item.price)}</p>
+          <p className="font-display mt-6 text-4xl">{money(item.price)}</p>
           <p className="mt-5 text-fg/80">{item.blurb}</p>
 
           <div className="mt-8 flex flex-col gap-3">
@@ -52,7 +52,7 @@ export default async function Product({ params }: { params: Promise<{ slug: stri
           </div>
         </div>
       </div>
-      <h2 className="font-display mt-24 text-4xl font-black">More from the bench</h2>
+      <h2 className="font-display mt-24 text-3xl">More from the bench</h2>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SHOP.filter((s) => s.slug !== item.slug).slice(0, 3).map((s) => <ShopCard key={s.slug} item={s} />)}
       </div>

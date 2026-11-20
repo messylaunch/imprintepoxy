@@ -19,7 +19,7 @@ export default async function Inbox({ searchParams }: { searchParams: Promise<{ 
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-2 text-sm font-semibold">
                 <span className="truncate">{x.user.name}</span>
-                {x.staffUnread && <span className="h-2 w-2 shrink-0 rounded-full bg-red shadow-[0_0_8px_#ff1f1f]" />}
+                {x.staffUnread && <span className="h-2 w-2 shrink-0 rounded-full bg-red" />}
               </span>
               <span className="block truncate text-[11px] text-red/90">{x.project ? `Project: ${x.project.name}` : x.topic === "custom" ? "Special request" : "General question"}</span>
               <span className="block truncate text-xs text-muted">{x.messages[0]?.body}</span>

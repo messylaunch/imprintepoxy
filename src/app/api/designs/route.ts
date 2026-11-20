@@ -10,6 +10,7 @@ export async function POST(req: Request) {
   const config = b.config as DesignConfig;
   if (!config || !["table", "helmet", "wall"].includes(config.product)) return fail("Bad design");
   if (config.imageUrl?.startsWith("blob:")) return fail("Image is still uploading");
+  config.effects = Array.isArray(config.effects) ? config.effects.slice(0, 1) : []; // one overlay max
   const thumbnail = typeof b.thumbnail === "string" && b.thumbnail.length < 600_000 ? b.thumbnail : null;
   const name = clean(b.name, 80) || "Untitled";
 

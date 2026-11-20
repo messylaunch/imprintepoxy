@@ -31,7 +31,7 @@ export default async function Dashboard() {
           {convs.length === 0 && <Empty>No open conversations</Empty>}
           {convs.map((c) => (
             <Link key={c.id} href={`/admin/inbox?c=${c.id}`} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5">
-              <span className={`h-2 w-2 shrink-0 rounded-full ${c.staffUnread ? "bg-red shadow-[0_0_8px_#ff1f1f]" : "bg-white/15"}`} />
+              <span className={`h-2 w-2 shrink-0 rounded-full ${c.staffUnread ? "bg-red" : "bg-white/15"}`} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold">{c.user.name} <span className="font-normal text-muted">· {c.project?.name ?? (c.topic === "custom" ? "Special request" : "General")}</span></span>
                 <span className="block truncate text-xs text-muted">{c.messages[0]?.body}</span>
@@ -86,9 +86,9 @@ export default async function Dashboard() {
 
 function Stat({ label, value, sub, href, hot }: { label: string; value: string | number; sub?: string; href: string; hot?: boolean }) {
   return (
-    <Link href={href} className={`panel press p-4 ${hot ? "ring-1 ring-red/60 shadow-[0_0_30px_-10px_#ff1f1f]" : ""}`}>
+    <Link href={href} className={`panel press p-4 ${hot ? "ring-1 ring-red/60" : ""}`}>
       <p className="font-tag text-[0.6rem] text-muted">{label}</p>
-      <p className="font-display mt-2 text-4xl font-black">{value}</p>
+      <p className="font-display mt-2 text-3xl">{value}</p>
       {sub && <p className="mt-1 text-xs text-muted">{sub}</p>}
     </Link>
   );
@@ -97,7 +97,7 @@ function Card({ title, href, children }: { title: string; href: string; children
   return (
     <div className="panel p-4">
       <div className="mb-2 flex items-center justify-between px-1">
-        <h2 className="font-display text-2xl font-black">{title}</h2>
+        <h2 className="font-display text-xl">{title}</h2>
         <Link href={href} className="font-tag text-[0.6rem] text-muted hover:text-red">All →</Link>
       </div>
       <div className="space-y-0.5">{children}</div>

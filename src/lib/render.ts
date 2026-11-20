@@ -217,6 +217,88 @@ function flakeLayer(id: string, w: number, h: number) {
   });
 }
 
+
+// ---------- filters (pixel-based, so they work in every browser incl. iOS Safari) ----------
+type M = number[]; // 4x5 color matrix, row-major (r,g,b,a,offset) — alpha row omitted (always identity)
+const ID: M = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0];
+function mul(a: M, b: M): M {
+  // returns a∘b (apply b first, then a); 3x4 affine matrices
+  const o: M = new Array(12).fill(0);
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 3; c++) o[r * 4 + c] = a[r * 4] * b[c] + a[r * 4 + 1] * b[4 + c] + a[r * 4 + 2] * b[8 + c];
+    o[r * 4 + 3] = a[r * 4] * b[3] + a[r * 4 + 1] * b[7] + a[r * 4 + 2] * b[11] + a[r * 4 + 3];
+  }
+  return o;
+}
+function saturateM(s: number): M {
+  return [0.213 + 0.787 * s, 0.715 - 0.715 * s, 0.072 - 0.072 * s, 0, 0.213 - 0.213 * s, 0.715 + 0.285 * s, 0.072 - 0.072 * s, 0, 0.213 - 0.213 * s, 0.715 - 0.715 * s, 0.072 + 0.928 * s, 0];
+}
+function sepiaM(a: number): M {
+  const k = 1 - a;
+  return [0.393 + 0.607 * k, 0.769 - 0.769 * k, 0.189 - 0.189 * k, 0, 0.349 - 0.349 * k, 0.686 + 0.314 * k, 0.168 - 0.168 * k, 0, 0.272 - 0.272 * k, 0.534 - 0.534 * k, 0.131 + 0.869 * k, 0];
+}
+function hueM(deg: number): M {
+  const r = (deg * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+  return [
+    0.213 + c * 0.787 - s * 0.213, 0.715 - c * 0.715 - s * 0.715, 0.072 - c * 0.072 + s * 0.928, 0,
+    0.213 - c * 0.213 + s * 0.143, 0.715 + c * 0.285 + s * 0.14, 0.072 - c * 0.072 - s * 0.283, 0,
+    0.213 - c * 0.213 - s * 0.787, 0.715 - c * 0.715 + s * 0.715, 0.072 + c * 0.928 + s * 0.072, 0,
+  ];
+}
+const brightM = (b: number): M => [b, 0, 0, 0, 0, b, 0, 0, 0, 0, b, 0];
+const contrastM = (c: number): M => { const o = (0.5 - 0.5 * c) * 255; return [c, 0, 0, o, 0, c, 0, o, 0, 0, c, o]; };
+
+function cssToMatrix(css: string): M | null {
+  if (!css || css === "none") return null;
+  let m = ID;
+  for (const [, fn, raw] of css.matchAll(/([a-z-]+)\(([^)]+)\)/g)) {
+    const v = parseFloat(raw);
+    const step =
+      fn === "saturate" ? saturateM(v) :
+      fn === "grayscale" ? saturateM(1 - v) :
+      fn === "sepia" ? sepiaM(v) :
+      fn === "hue-rotate" ? hueM(v) :
+      fn === "brightness" ? brightM(v) :
+      fn === "contrast" ? contrastM(v) : ID;
+    m = mul(step, m);
+  }
+  return m;
+}
+
+const filterCache = new Map<string, HTMLCanvasElement>();
+function filteredSource(img: HTMLImageElement, filterId: string): { src: CanvasImageSource; width: number; height: number } {
+  const f = FILTERS.find((x) => x.id === filterId);
+  const m = f ? cssToMatrix(f.css) : null;
+  if (!m) return { src: img, width: img.naturalWidth, height: img.naturalHeight };
+  const key = img.src + "|" + filterId;
+  let c = filterCache.get(key);
+  if (!c) {
+    const max = 1800;
+    const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(img.naturalWidth * k));
+    c.height = Math.max(1, Math.round(img.naturalHeight * k));
+    const x = c.getContext("2d", { willReadFrequently: true })!;
+    x.drawImage(img, 0, 0, c.width, c.height);
+    try {
+      const d = x.getImageData(0, 0, c.width, c.height);
+      const p = d.data;
+      for (let i = 0; i < p.length; i += 4) {
+        const r = p[i], g = p[i + 1], b = p[i + 2];
+        p[i] = m[0] * r + m[1] * g + m[2] * b + m[3];
+        p[i + 1] = m[4] * r + m[5] * g + m[6] * b + m[7];
+        p[i + 2] = m[8] * r + m[9] * g + m[10] * b + m[11];
+      }
+      x.putImageData(d, 0, 0);
+    } catch {
+      /* cross-origin image: fall back to unfiltered */
+    }
+    if (filterCache.size > 24) filterCache.clear();
+    filterCache.set(key, c);
+  }
+  return { src: c, width: c.width, height: c.height };
+}
+
 // ---------- main ----------
 export type RenderOpts = { sheen?: number; background?: string | null };
 
@@ -285,16 +367,14 @@ export function renderDesign(canvas: HTMLCanvasElement, cfg: DesignConfig, img: 
   ctx.fillRect(S.x, S.y, S.w, S.h);
   if (img) {
     const t = cfg.transform;
-    const base = Math.max(S.w / img.naturalWidth, S.h / img.naturalHeight);
+    const { src, width: iw, height: ih } = filteredSource(img, cfg.filter);
+    const base = Math.max(S.w / iw, S.h / ih);
     const sc = base * t.scale;
     ctx.save();
     ctx.translate(S.x + S.w / 2 + t.x * S.w, S.y + S.h / 2 + t.y * S.h);
     ctx.rotate((t.rotation * Math.PI) / 180);
-    const f = FILTERS.find((x) => x.id === cfg.filter);
-    if (f && f.css !== "none") ctx.filter = f.css;
-    ctx.drawImage(img, (-img.naturalWidth * sc) / 2, (-img.naturalHeight * sc) / 2, img.naturalWidth * sc, img.naturalHeight * sc);
+    ctx.drawImage(src, (-iw * sc) / 2, (-ih * sc) / 2, iw * sc, ih * sc);
     ctx.restore();
-    ctx.filter = "none";
   } else {
     placeholder(ctx, S);
   }

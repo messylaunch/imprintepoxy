@@ -77,7 +77,7 @@ export function AuthSheet({ open, onClose, reason }: { open: boolean; onClose: (
             <button onClick={onClose} className="press absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/5" aria-label="Close">
               <X size={16} />
             </button>
-            <h2 className="font-display text-4xl font-black">Save your work</h2>
+            <h2 className="font-display text-3xl">Save your work</h2>
             {reason && <p className="mb-5 mt-1 text-sm text-muted">{reason}</p>}
             <AuthForm onDone={onClose} />
           </motion.div>
