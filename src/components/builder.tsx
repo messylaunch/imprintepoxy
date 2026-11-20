@@ -3,8 +3,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, FolderPlus, ImagePlus, Loader2, RotateCcw, RotateCw, ShoppingBag, X, Zap, Crosshair, Move } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, FolderPlus, ImagePlus, Loader2, RotateCcw, RotateCw, ShoppingBag, X, Zap, Crosshair, Move, Box, Square } from "lucide-react";
 import { DesignCanvas } from "./design-canvas";
+import dynamic from "next/dynamic";
+const Mockup3D = dynamic(() => import("./mockup-3d").then((m) => m.Mockup3D), { ssr: false });
 import { AuthSheet } from "./auth-sheet";
 import { api, useCart, useToast, useUser } from "./providers";
 import { DesignConfig, EFFECTS, FILTERS, FLAKES, FRAMES, PRODUCTS, ProductType, TOPCOATS, describe, money, priceOf } from "@/lib/design";
@@ -18,6 +20,8 @@ type Props = {
   projects: { id: string; name: string; count: number }[];
   defaultProjectId?: string | null;
 };
+
+type Pick = "size" | "frame" | "orientation" | "filter" | "overlay" | "topcoat" | "flake";
 
 const STEPS = [
   { id: "pick", label: "Pick it", title: "Size & style" },
@@ -33,9 +37,15 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
   const cart = useCart();
   const toast = useToast();
   const { user } = useUser();
-  const draftKey = `ie_draft_${product}`;
+  const draftKey = `ie_draft2_${product}`;
+  const ALL: Pick[] = ["size", "frame", "orientation", "filter", "overlay", "topcoat", "flake"];
+  const startsBlank = !design && !fromPreset;
 
-  const [cfg, setCfg] = useState<DesignConfig>(initial);
+  // A fresh build starts blank: nothing is selected until the customer picks it.
+  const [cfg, setCfg] = useState<DesignConfig>(() => (startsBlank ? { ...initial, topcoat: "none", flake: "none", effects: [], filter: "none" } : initial));
+  const [picked, setPicked] = useState<Set<Pick>>(() => new Set(startsBlank ? [] : ALL));
+  const has = (k: Pick) => picked.has(k);
+  const [view3d, setView3d] = useState(false);
   const [step, setStep] = useState(design ? 1 : 0);
   const [dir, setDir] = useState(1);
   const [name, setName] = useState(design?.name ?? "");
@@ -53,18 +63,22 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
     if (design || fromPreset) return;
     try {
       const d = localStorage.getItem(draftKey);
-      if (d) setCfg((c) => ({ ...c, ...JSON.parse(d) }));
+      if (d) {
+        const j = JSON.parse(d);
+        if (j.cfg) setCfg((c) => ({ ...c, ...j.cfg }));
+        if (Array.isArray(j.picked)) setPicked(new Set(j.picked));
+      }
     } catch {}
   }, [design, fromPreset, draftKey]);
   useEffect(() => {
     if (design) return;
     const t = setTimeout(() => {
       try {
-        if (!cfg.imageUrl?.startsWith("blob:")) localStorage.setItem(draftKey, JSON.stringify(cfg));
+        if (!cfg.imageUrl?.startsWith("blob:")) localStorage.setItem(draftKey, JSON.stringify({ cfg, picked: [...picked] }));
       } catch {}
     }, 300);
     return () => clearTimeout(t);
-  }, [cfg, design, draftKey]);
+  }, [cfg, picked, design, draftKey]);
 
   // keep focused/scrolled-to controls clear of the sticky preview + bottom bar on phones
   useEffect(() => {
@@ -84,12 +98,30 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
   }, []);
 
   const set = useCallback((patch: Partial<DesignConfig>) => setCfg((c) => ({ ...c, ...patch })), []);
+  const choose = useCallback((k: Pick, patch: Partial<DesignConfig>) => {
+    setCfg((c) => ({ ...c, ...patch }));
+    setPicked((p) => new Set(p).add(k));
+  }, []);
+  // what each step still needs before moving on
+  const missing = (n: number): string | null => (n === 0 && !has("size") ? "Pick a size" : n === 1 && !cfg.imageUrl ? "Add your image" : n === 2 && !has("topcoat") ? "Pick a topcoat" : null);
   const setTransform = useCallback((t: DesignConfig["transform"]) => setCfg((c) => ({ ...c, transform: t })), []);
   const price = priceOf(cfg);
   const P = PRODUCTS[product];
 
   const go = (n: number) => {
     if (n < 0 || n >= STEPS.length) return;
+    if (n > step) {
+      for (let k = step; k < n; k++) {
+        const m = missing(k);
+        if (m) {
+          toast(m);
+          n = k;
+          break;
+        }
+      }
+      if (n === step) return;
+    }
+    if (n === 3) setView3d(true);
     setDir(n > step ? 1 : -1);
     setStep(n);
     if (window.innerWidth < 768) window.scrollTo({ top: 0, behavior: "smooth" });
@@ -136,9 +168,12 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
   }
 
   async function act(kind: "save" | "cart" | "buy") {
-    if (!cfg.imageUrl) {
-      toast("Add your image first");
-      return go(1);
+    for (const n of [0, 1, 2]) {
+      const m = missing(n);
+      if (m) {
+        toast(m + " first");
+        return go(n);
+      }
     }
     if (uploading) return toast("Hang tight, still uploading…");
     if (kind === "save" && !user) {
@@ -213,8 +248,12 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
               </button>
             ))}
           </div>
-          <motion.div key={price} initial={{ y: -6, opacity: 0.4 }} animate={{ y: 0, opacity: 1 }} className="font-display shrink-0 text-xl md:text-3xl">
-            {money(price)}
+          <motion.div key={has("size") ? price : "from"} initial={{ y: -6, opacity: 0.4 }} animate={{ y: 0, opacity: 1 }} className="shrink-0 text-right">
+            {has("size") ? (
+              <span className="font-display text-xl md:text-2xl">{money(price)}</span>
+            ) : (
+              <span className="text-sm text-muted">From {money(P.sizes[0].price)}</span>
+            )}
           </motion.div>
         </div>
       </div>
@@ -224,7 +263,26 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
         <div className="sticky top-16 z-20 min-w-0 md:top-24 md:self-start">
           <div className="relative h-[44svh] overflow-hidden bg-[radial-gradient(70%_60%_at_50%_45%,#26262e_0%,#0d0d10_70%)] md:h-[calc(100svh-8rem)] md:rounded-[2rem] md:ring-1 md:ring-line">
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(180deg,transparent,rgba(255,30,30,0.06))]" />
-            <DesignCanvas config={cfg} interactive={!!cfg.imageUrl} onTransform={setTransform} className="absolute inset-0" />
+            {view3d && step === 3 ? (
+              <Mockup3D config={cfg} className="absolute inset-0" />
+            ) : (
+              <DesignCanvas config={cfg} interactive={!!cfg.imageUrl} onTransform={setTransform} className="absolute inset-0" />
+            )}
+            {step === 3 && cfg.imageUrl && (
+              <div className="absolute right-3 top-3 z-10 flex rounded-full bg-black/60 p-1 text-xs backdrop-blur">
+                {[
+                  [false, "Design", Square],
+                  [true, "3D preview", Box],
+                ].map(([v, label, Icon]) => {
+                  const I = Icon as typeof Box;
+                  return (
+                    <button key={String(v)} onClick={() => setView3d(v as boolean)} className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 transition-colors ${view3d === v ? "bg-fg text-ink" : "text-fg/75"}`}>
+                      <I size={13} /> {label as string}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
             {uploading && (
               <div className="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/70 px-3 py-1.5 text-xs backdrop-blur">
                 <Loader2 size={14} className="animate-spin" /> Uploading…
@@ -242,7 +300,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                 </span>
               </button>
             )}
-            <div className="absolute bottom-3 left-3 rounded-full bg-black/55 px-3 py-1.5 text-[11px] text-fg/70 backdrop-blur">{describe(cfg)[0]}</div>
+            {has("size") && <div className="absolute bottom-3 left-3 rounded-full bg-black/55 px-3 py-1.5 text-[11px] text-fg/70 backdrop-blur">{describe(cfg)[0]}</div>}
           </div>
         </div>
 
@@ -270,11 +328,11 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                   <Group label={P.name}>
                     <div className="grid grid-cols-2 gap-2">
                       {P.sizes.map((s) => (
-                        <button key={s.id} data-on={cfg.size === s.id} onClick={() => set({ size: s.id })} className="chip p-4 text-left">
+                        <button key={s.id} data-on={has("size") && cfg.size === s.id} onClick={() => choose("size", { size: s.id })} className="chip p-4 text-left">
                           <div className="text-lg font-semibold leading-tight">{s.label}</div>
                           <div className="mt-1 text-xs text-muted">{s.dims}</div>
                           <div className="mt-3 text-sm font-semibold">{money(s.price)}</div>
-                          {cfg.size === s.id && <Check size={16} className="absolute right-3 top-3 text-red" />}
+                          {has("size") && cfg.size === s.id && <Check size={16} className="absolute right-3 top-3 text-fg" />}
                         </button>
                       ))}
                     </div>
@@ -283,7 +341,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                     <Group label="Orientation">
                       <div className="grid grid-cols-2 gap-2">
                         {(["landscape", "portrait"] as const).map((o) => (
-                          <button key={o} data-on={cfg.orientation === o} onClick={() => set({ orientation: o })} className="chip flex items-center gap-3 p-4 capitalize">
+                          <button key={o} data-on={has("orientation") && cfg.orientation === o} onClick={() => choose("orientation", { orientation: o })} className="chip flex items-center gap-3 p-4 capitalize">
                             <span className={`inline-block rounded-sm ring-2 ring-fg/60 ${o === "landscape" ? "h-5 w-7" : "h-7 w-5"}`} /> {o}
                           </button>
                         ))}
@@ -291,7 +349,7 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                     </Group>
                   )}
                   <Group label={P.frameLabel}>
-                    <Swatches items={FRAMES.map((f) => ({ id: f.id, label: f.label, bg: `linear-gradient(135deg, ${f.shine}, ${f.color} 55%, ${f.color})` }))} value={cfg.frame} onChange={(v) => set({ frame: v })} />
+                    <Swatches items={FRAMES.map((f) => ({ id: f.id, label: f.label, bg: `linear-gradient(135deg, ${f.shine}, ${f.color} 55%, ${f.color})` }))} value={has("frame") ? cfg.frame : ""} onChange={(v) => choose("frame", { frame: v })} />
                   </Group>
                 </div>
               )}
@@ -337,11 +395,11 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                   <Group label="Filter">
                     <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
                       {FILTERS.map((f) => (
-                        <button key={f.id} onClick={() => set({ filter: f.id })} className="press shrink-0 text-center">
-                          <div className={`h-16 w-16 overflow-hidden rounded-2xl ring-2 transition ${cfg.filter === f.id ? "ring-red" : "ring-white/10"}`}>
+                        <button key={f.id} onClick={() => choose("filter", { filter: f.id })} className="press shrink-0 text-center">
+                          <div className={`h-16 w-16 overflow-hidden rounded-2xl ring-2 transition ${has("filter") && cfg.filter === f.id ? "ring-fg" : "ring-white/10"}`}>
                             <img src={cfg.imageUrl ?? "/media/ponds-top.jpg"} alt="" className="h-full w-full object-cover" style={{ filter: f.css }} />
                           </div>
-                          <span className={`mt-1 block text-[11px] ${cfg.filter === f.id ? "text-fg" : "text-muted"}`}>{f.label}</span>
+                          <span className={`mt-1 block text-[11px] ${has("filter") && cfg.filter === f.id ? "text-fg" : "text-muted"}`}>{f.label}</span>
                         </button>
                       ))}
                     </div>
@@ -355,13 +413,13 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                   <Group label="Topcoat">
                     <div className="grid gap-2">
                       {TOPCOATS.map((t) => (
-                        <button key={t.id} data-on={cfg.topcoat === t.id} onClick={() => set({ topcoat: t.id })} className="chip flex items-center gap-4 p-4 text-left">
+                        <button key={t.id} data-on={has("topcoat") && cfg.topcoat === t.id} onClick={() => choose("topcoat", { topcoat: t.id })} className="chip flex items-center gap-4 p-4 text-left">
                           <span className="h-12 w-12 shrink-0 rounded-xl ring-1 ring-white/15" style={{ background: t.id === "gloss" ? "linear-gradient(135deg,#444 0%,#111 45%,#fff 50%,#222 56%,#111 100%)" : t.id === "satin" ? "linear-gradient(135deg,#3a3a40,#1a1a1f 60%,#2c2c33)" : "#1d1d22" }} />
                           <div>
                             <div className="text-lg font-semibold leading-tight">{t.label}</div>
                             <div className="mt-1 text-xs text-muted">{t.hint}</div>
                           </div>
-                          {cfg.topcoat === t.id && <Check size={18} className="ml-auto text-red" />}
+                          {has("topcoat") && cfg.topcoat === t.id && <Check size={18} className="ml-auto text-fg" />}
                         </button>
                       ))}
                     </div>
@@ -369,16 +427,16 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                   <Group label={`Metal flake ${cfg.flake !== "none" ? `· +${money(P.flakePrice)}` : ""}`}>
                     <Swatches
                       items={FLAKES.map((f) => ({ id: f.id, label: f.label, bg: f.color.length ? `radial-gradient(circle at 30% 30%, ${f.color[0]}, ${f.color[1]} 40%, ${f.color[f.color.length - 1]})` : "repeating-linear-gradient(45deg,#222 0 4px,#2c2c33 4px 8px)" }))}
-                      value={cfg.flake}
-                      onChange={(v) => set({ flake: v })}
+                      value={has("flake") ? cfg.flake : ""}
+                      onChange={(v) => choose("flake", { flake: v })}
                     />
                   </Group>
                   <Group label="Overlay · pick one (optional)">
                     <div className="grid grid-cols-4 gap-2">
                       {[{ id: "none", label: "None", hint: "Just the pour" }, ...EFFECTS].map((e) => {
-                        const on = e.id === "none" ? cfg.effects.length === 0 : cfg.effects[0] === e.id;
+                        const on = has("overlay") && (e.id === "none" ? cfg.effects.length === 0 : cfg.effects[0] === e.id);
                         return (
-                          <button key={e.id} data-on={on} onClick={() => set({ effects: e.id === "none" ? [] : [e.id] })} className="chip px-2 py-3 text-center">
+                          <button key={e.id} data-on={on} onClick={() => choose("overlay", { effects: e.id === "none" ? [] : [e.id] })} className="chip px-2 py-3 text-center">
                             <FxIcon id={e.id} />
                             <div className="mt-1.5 text-xs font-medium">{e.label}</div>
                           </button>
@@ -457,11 +515,13 @@ export function Builder({ product, initial, fromPreset, design, projects, defaul
                 </button>
               )}
               {step < 3 ? (
-                <button onClick={() => (step === 1 && !cfg.imageUrl ? fileRef.current?.click() : go(step + 1))} className="btn h-14 flex-1">
+                <button onClick={() => (step === 1 && !cfg.imageUrl ? fileRef.current?.click() : go(step + 1))} className={`btn h-14 flex-1 ${missing(step) && !(step === 1) ? "opacity-50" : ""}`}>
                   {step === 1 && !cfg.imageUrl ? (
                     <>
                       <ImagePlus size={16} /> Upload image
                     </>
+                  ) : missing(step) ? (
+                    <>{missing(step)} to continue</>
                   ) : (
                     <>
                       Next: {STEPS[step + 1].label} <ArrowRight size={16} />

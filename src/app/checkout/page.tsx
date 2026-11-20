@@ -7,7 +7,7 @@ import { CreditCard, Loader2, Lock, MapPin, Store, Wand2 } from "lucide-react";
 import { api, useCart, useUser } from "@/components/providers";
 import { money } from "@/lib/design";
 import { quote } from "@/lib/pricing";
-import { US_STATES } from "@/lib/site";
+import { US_STATES, site } from "@/lib/site";
 
 export default function Checkout() {
   const cart = useCart();
@@ -142,7 +142,10 @@ export default function Checkout() {
           <button className="btn mt-5 h-14 w-full" disabled={busy}>
             {busy ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />} Pay {money(totals.total)}
           </button>
-          <p className="mt-3 text-center text-[11px] text-muted">A portion of every order supports Imprint.</p>
+          <p className="mt-3 text-center text-xs text-muted">A portion of every order supports Imprint.</p>
+          <p className="mt-4 border-t border-line pt-4 text-center text-xs text-muted">
+            Questions before you pay? <a href={site.phoneHref} className="text-fg hover:underline">{site.phone}</a>
+          </p>
         </div>
       </div>
     </form>

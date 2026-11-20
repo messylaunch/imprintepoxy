@@ -10,8 +10,11 @@ export const site = {
     poster: "/media/gen/hero-pour-poster.webp",
     posterMobile: "/media/gen/hero-pour-mobile-poster.webp",
   } as { desktop: string; mobile: string; poster: string; posterMobile: string } | null,
-  phone: "(555) 555-0123",
-  email: "hello@imprintepoxy.com",
+  phone: "(863) 999-1182",
+  phoneHref: "tel:+18639991182",
+  smsHref: "sms:+18639991182",
+  email: "imprintepoxydesign@gmail.com",
+  emailHref: "mailto:imprintepoxydesign@gmail.com",
   instagram: "https://instagram.com/",
   imprintUrl: "/imprint",
 };

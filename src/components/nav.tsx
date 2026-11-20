@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Hammer, Home, LayoutGrid, ShoppingBag, FolderHeart, User, Shield } from "lucide-react";
 import { useCart, useUser, api } from "./providers";
 import { useEffect, useState } from "react";
+import { site } from "@/lib/site";
 
 const links = [
   { href: "/shop", label: "Shop" },
@@ -134,14 +135,19 @@ export function Footer() {
   if (path.startsWith("/build/") || path.endsWith("/show") || path.startsWith("/admin")) return null;
   return (
     <footer className="mt-32 border-t border-line pb-24 md:pb-10">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-[1.6fr_1fr_1fr_1fr] md:px-8">
-        <div>
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-10 px-5 py-14 md:grid-cols-[1.5fr_1fr_1fr_1fr_1.3fr] md:px-8">
+        <div className="col-span-2 md:col-span-1">
           <Wordmark />
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted">Custom epoxy tables, helmet displays and wall art, poured by hand. Every piece supports Imprint, our community nonprofit.</p>
         </div>
         <FooterCol title="Shop" items={[["/shop", "Finished pieces"], ["/build/table", "Custom tables"], ["/build/helmet", "Helmet displays"], ["/build/wall", "Wall art"]]} />
         <FooterCol title="Help" items={[["/#faq", "FAQ"], ["/build/custom", "Special request"], ["/projects", "My projects"], ["/account", "Orders"]]} />
         <FooterCol title="Imprint" items={[["/imprint", "Our mission"], ["/qr", "Event QR code"]]} />
+        <div className="space-y-2.5 text-sm">
+          <p className="mb-3 text-xs font-medium text-muted">Contact</p>
+          <a href={site.phoneHref} className="block text-fg/80 hover:text-fg">{site.phone}</a>
+          <a href={site.emailHref} className="block break-all text-fg/80 hover:text-fg">{site.email}</a>
+        </div>
       </div>
       <div className="mx-auto max-w-7xl px-5 text-xs text-muted md:px-8">© {new Date().getFullYear()} Imprint Epoxy Design</div>
     </footer>

@@ -7,8 +7,8 @@ import { ShopCard } from "./cards";
 const tabs = [
   { id: "all", label: "All" },
   { id: "table", label: "Tables" },
-  { id: "helmet", label: "Helmets" },
-  { id: "wall", label: "Wall Art" },
+  { id: "helmet", label: "Helmet displays" },
+  { id: "wall", label: "Wall art" },
 ];
 
 export function ShopGrid() {
@@ -16,18 +16,18 @@ export function ShopGrid() {
   const items = SHOP.filter((s) => tab === "all" || s.category === tab);
   return (
     <>
-      <div className="no-scrollbar mb-8 flex gap-2 overflow-x-auto">
+      <div className="no-scrollbar mb-8 flex gap-6 overflow-x-auto border-b border-line">
         {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} className="press relative shrink-0 rounded-full px-5 py-2.5 font-tag text-xs">
-            {tab === t.id && <motion.span layoutId="shop-tab" className="absolute inset-0 rounded-full" style={{ background: "var(--candy)" }} transition={{ type: "spring", duration: 0.4, bounce: 0.15 }} />}
-            <span className="relative">{t.label}</span>
+          <button key={t.id} onClick={() => setTab(t.id)} className={`relative shrink-0 pb-3 text-sm transition-colors ${tab === t.id ? "text-fg" : "text-muted hover:text-fg"}`}>
+            {t.label}
+            {tab === t.id && <motion.span layoutId="shop-tab" className="absolute inset-x-0 -bottom-px h-px bg-fg" transition={{ type: "spring", duration: 0.35, bounce: 0.1 }} />}
           </button>
         ))}
       </div>
-      <motion.div layout className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div layout className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4">
         <AnimatePresence mode="popLayout">
           {items.map((s) => (
-            <motion.div key={s.slug} layout initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.15 } }} transition={{ type: "spring", duration: 0.45, bounce: 0.1 }}>
+            <motion.div key={s.slug} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.12 } }} transition={{ duration: 0.25 }}>
               <ShopCard item={s} />
             </motion.div>
           ))}

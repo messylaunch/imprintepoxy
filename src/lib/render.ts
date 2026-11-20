@@ -363,6 +363,30 @@ export function renderDesign(canvas: HTMLCanvasElement, cfg: DesignConfig, img: 
   // --- printed surface ---
   ctx.save();
   ctx.clip(shape);
+  drawPrint(ctx, cfg, img, S, shape, m);
+
+  // --- topcoat ---
+  topcoat(ctx, cfg.topcoat, S, opts.sheen ?? 0.32);
+  ctx.restore();
+
+  // --- domed edge highlight ---
+  if (cfg.topcoat === "gloss" || cfg.topcoat === "satin") {
+    ctx.save();
+    ctx.clip(shape);
+    ctx.strokeStyle = "rgba(255,255,255,0.22)";
+    ctx.lineWidth = m * 0.008;
+    ctx.translate(m * 0.003, m * 0.003);
+    ctx.stroke(shape);
+    ctx.restore();
+  }
+
+  if (cfg.product === "helmet") helmetHardware(ctx, S, frame);
+  return S;
+}
+
+
+/** The printed artwork only (image, filter, overlay, flake), already clipped by the caller. */
+function drawPrint(ctx: CanvasRenderingContext2D, cfg: DesignConfig, img: HTMLImageElement | null, S: Rect, shape: Path2D, m: number) {
   ctx.fillStyle = "#121216";
   ctx.fillRect(S.x, S.y, S.w, S.h);
   if (img) {
@@ -406,26 +430,26 @@ export function renderDesign(canvas: HTMLCanvasElement, cfg: DesignConfig, img: 
     ctx.restore();
   }
 
-  // --- topcoat ---
-  topcoat(ctx, cfg.topcoat, S, opts.sheen ?? 0.32);
+}
+
+/** Flat texture of the printed surface for the 3D mockup (no frame, no fake gloss). */
+export function renderPrintTexture(cfg: DesignConfig, img: HTMLImageElement | null, px = 1600): HTMLCanvasElement {
+  const a = surfaceAspect(cfg);
+  const c = document.createElement("canvas");
+  c.width = a >= 1 ? px : Math.round(px * a);
+  c.height = a >= 1 ? Math.round(px / a) : px;
+  const ctx = c.getContext("2d")!;
+  const S: Rect = { x: 0, y: 0, w: c.width, h: c.height };
+  const shape = shapePath(cfg, S);
+  ctx.save();
+  ctx.clip(shape);
+  drawPrint(ctx, cfg, img, S, shape, Math.min(S.w, S.h));
   ctx.restore();
-
-  // --- domed edge highlight ---
-  if (cfg.topcoat !== "matte") {
-    ctx.save();
-    ctx.clip(shape);
-    ctx.strokeStyle = "rgba(255,255,255,0.22)";
-    ctx.lineWidth = m * 0.008;
-    ctx.translate(m * 0.003, m * 0.003);
-    ctx.stroke(shape);
-    ctx.restore();
-  }
-
-  if (cfg.product === "helmet") helmetHardware(ctx, S, frame);
-  return S;
+  return c;
 }
 
 function topcoat(ctx: CanvasRenderingContext2D, kind: string, S: Rect, pos: number) {
+  if (kind === "none" || !kind) return;
   ctx.globalCompositeOperation = "screen";
   if (kind === "gloss") {
     const cx = S.x + S.w * pos * 1.6 - S.w * 0.3;

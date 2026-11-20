@@ -1,31 +1,24 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { ShopGrid } from "@/components/shop-grid";
-import { ConceptCard } from "@/components/cards";
-import { CONCEPTS } from "@/lib/catalog";
 
 export const metadata = { title: "Shop" };
 
 export default function Shop() {
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-28 md:px-6">
-      <p className="text-sm text-muted">Catalog</p>
-      <h1 className="font-display mt-2 text-5xl md:text-6xl">
-        <span className="chrome-text">Ready to pour</span>
-      </h1>
-      <p className="mt-3 max-w-xl text-sm text-muted">Finished pieces you can buy right now, or remix into your own. Every piece is hand-poured and sealed in high-gloss epoxy.</p>
+    <div className="mx-auto max-w-7xl px-5 pt-28 md:px-8">
+      <h1 className="font-display text-5xl md:text-6xl">Shop</h1>
+      <p className="mt-3 max-w-lg text-muted">Finished pieces, hand-poured and ready to go. Hover to see the real photo.</p>
       <div className="mt-10">
         <ShopGrid />
       </div>
-      <div className="mt-20 flex items-end justify-between">
-        <div>
-          <p className="text-sm text-muted">Made to order</p>
-          <h2 className="font-display mt-2 text-4xl md:text-5xl">Ideas we can make</h2>
-        </div>
-        <Link href="/build" className="btn btn-ghost btn-sm hidden md:inline-flex">Build from scratch</Link>
-      </div>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {CONCEPTS.map((c) => <ConceptCard key={c.slug} c={c} />)}
-      </div>
+      <Link href="/build" className="press group mt-16 flex items-center justify-between rounded-2xl border border-line px-6 py-5 transition-colors hover:bg-white/[0.03]">
+        <span>
+          <span className="block font-medium">Want one with your own photo?</span>
+          <span className="block text-sm text-muted">Design a table, helmet display or wall piece in about a minute.</span>
+        </span>
+        <ArrowRight size={18} className="shrink-0 text-muted transition-colors group-hover:text-fg" />
+      </Link>
     </div>
   );
 }

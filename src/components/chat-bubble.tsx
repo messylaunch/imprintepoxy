@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChevronRight, FolderHeart, HelpCircle, MessageCircle, Send, X } from "lucide-react";
 import { api, useUser } from "./providers";
+import { site } from "@/lib/site";
 
 type Msg = { id: string; body: string; fromStaff: boolean; authorName: string; createdAt: string; attachmentId?: string | null };
 type Conv = { id: string; topic: string; project: { id: string; name: string } | null; userUnread: boolean; lastMessageAt: string; messages: Msg[] };
@@ -62,7 +63,7 @@ export function ChatBubble() {
     <>
       <motion.button
         onClick={() => setOpen((o) => !o)}
-        className={`fixed bottom-24 right-4 z-[60] h-14 w-14 place-items-center rounded-full md:bottom-6 md:right-6 ${focused && !open ? "hidden md:grid" : "grid"}`}
+        className={`fixed bottom-20 right-4 z-[60] h-12 w-12 place-items-center rounded-full md:bottom-6 md:right-6 md:h-14 md:w-14 ${focused && !open ? "hidden md:grid" : "grid"}`}
         style={{ background: "var(--color-red)", boxShadow: "0 8px 24px -8px rgba(0,0,0,.6)" }}
         whileTap={{ scale: 0.94 }}
         aria-label="Chat with us"
@@ -87,12 +88,20 @@ export function ChatBubble() {
           >
             {view.v === "home" && (
               <div className="overflow-y-auto p-5">
-                <img src="/media/logo-256.png" alt="" className="h-12" />
+                <img src="/icon.png" alt="" className="h-10 w-10" />
                 <h3 className="font-display mt-3 text-3xl">Hey{user ? `, ${user.name.split(" ")[0]}` : ""} 👋</h3>
                 <p className="mt-1 text-sm text-muted">What do you need help with?</p>
                 <div className="mt-5 grid gap-2">
                   <Option icon={HelpCircle} title="General question" sub="Pricing, timing, pickup, anything" onClick={() => setView({ v: "thread", id: null, topic: "general" })} />
                   <Option icon={FolderHeart} title="Help with my project" sub={user ? (projects.length ? `${projects.length} saved project${projects.length > 1 ? "s" : ""}` : "Save a design first") : "Sign in to pick a project"} onClick={() => (projects.length ? setView({ v: "pick" }) : setView({ v: "thread", id: null, topic: "general" }))} />
+                </div>
+                <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-line px-4 py-3 text-sm">
+                  <span className="text-muted">Rather talk?</span>
+                  <span className="flex gap-4">
+                    <a href={site.phoneHref} className="font-medium hover:text-red">Call</a>
+                    <a href={site.smsHref} className="font-medium hover:text-red">Text</a>
+                    <a href={site.emailHref} className="font-medium hover:text-red">Email</a>
+                  </span>
                 </div>
                 {convs.length > 0 && (
                   <>

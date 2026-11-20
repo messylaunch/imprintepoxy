@@ -7,7 +7,8 @@ export type ShopItem = {
   price: number; // cents
   status: "available" | "sold";
   size: string;
-  image: string;
+  image: string; // main photo (staged mockup)
+  photo: string; // the real piece, shown on hover
   gallery: string[];
   blurb: string;
   // "Build one like this" starting point
@@ -23,8 +24,9 @@ export const SHOP: ShopItem[] = [
     price: 85000,
     status: "sold",
     size: 'Coffee table · 48" × 24"',
-    image: "/media/ponds-table.jpg",
-    gallery: ["/media/ponds-table.jpg", "/media/gen/hero-pour.mp4", "/media/gen/macro-flake.webp", "/media/ponds-top.jpg"],
+    image: "/media/gen/shop-ponds-staged.webp",
+    photo: "/media/ponds-table.jpg",
+    gallery: ["/media/gen/shop-ponds-staged.webp", "/media/ponds-table.jpg", "/media/gen/hero-pour.mp4", "/media/ponds-top.jpg"],
     blurb: "Gold script, crown & diamond heart under a mirror-gloss pour with gold flake. A one-of-one family piece. Want your name like this? Build one.",
     preset: { product: "table", size: "coffee", imageUrl: "/media/ponds-top.jpg", effects: ["sparkle"], flake: "gold", frame: "black" },
   },
@@ -35,8 +37,9 @@ export const SHOP: ShopItem[] = [
     price: 19500,
     status: "available",
     size: 'Wall art · 18" × 24"',
-    image: "/media/florida-classic-shop.jpg",
-    gallery: ["/media/florida-classic-shop.jpg", "/media/gen/broll-rivalry-panel.mp4", "/media/florida-classic.jpg"],
+    image: "/media/gen/shop-florida-staged.webp",
+    photo: "/media/florida-classic-shop.jpg",
+    gallery: ["/media/gen/shop-florida-staged.webp", "/media/florida-classic-shop.jpg", "/media/gen/broll-rivalry-panel.mp4"],
     blurb: "Game-day energy sealed in glass-clear epoxy with silver shimmer. Ready to hang.",
     preset: { product: "wall", size: "18x24", imageUrl: "/media/florida-classic.jpg", flake: "silver" },
   },
@@ -47,8 +50,9 @@ export const SHOP: ShopItem[] = [
     price: 19500,
     status: "available",
     size: 'Wall art · 18" × 24"',
-    image: "/media/bcu-shop.jpg",
-    gallery: ["/media/bcu-shop.jpg", "/media/gen/broll-helmet-panel.mp4", "/media/bcu-helmet-panel.jpg"],
+    image: "/media/gen/shop-bcu-staged.webp",
+    photo: "/media/bcu-shop.jpg",
+    gallery: ["/media/gen/shop-bcu-staged.webp", "/media/bcu-shop.jpg", "/media/gen/broll-helmet-panel.mp4"],
     blurb: "Maroon & gold helmet art with gold flake throughout. Deep, glossy, loud.",
     preset: { product: "wall", size: "18x24", imageUrl: "/media/bcu-helmet-panel.jpg", flake: "gold" },
   },
@@ -59,8 +63,9 @@ export const SHOP: ShopItem[] = [
     price: 22500,
     status: "available",
     size: 'Helmet display · 24" wide',
-    image: "/media/cowboys-helmet.jpg",
-    gallery: ["/media/cowboys-helmet.jpg"],
+    image: "/media/gen/idea-helmet-mancave.webp",
+    photo: "/media/cowboys-helmet.jpg",
+    gallery: ["/media/gen/idea-helmet-mancave.webp", "/media/cowboys-helmet.jpg"],
     blurb: "Helmet-cut wall display with a real facemask look and silver sparkle coat.",
     preset: { product: "helmet", size: "m", imageUrl: "/media/cowboys-helmet.jpg", flake: "silver", frame: "black", transform: { x: 0.02, y: 0.02, scale: 1.12, rotation: 0 } },
   },

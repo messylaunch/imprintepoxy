@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { db } from "@/lib/db";
 import { getSession, isStaff } from "@/lib/auth";
 import { money } from "@/lib/design";
+import { site } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,10 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         <Link href="/account" className="btn btn-ghost">My account</Link>
         <Link href="/imprint" className="btn">See who you just supported</Link>
       </div>
+      <p className="mt-8 text-sm text-muted">
+        Questions about your order? Call or text <a href={site.phoneHref} className="text-fg hover:underline">{site.phone}</a> or email{" "}
+        <a href={site.emailHref} className="text-fg hover:underline">{site.email}</a>.
+      </p>
     </div>
   );
 }

@@ -19,32 +19,20 @@ export function useBuyNow() {
 }
 
 export function ShopCard({ item }: { item: ShopItem }) {
-  const buy = useBuyNow();
   const sold = item.status === "sold";
   return (
-    <div className="group flex flex-col">
-      <Link href={`/shop/${item.slug}`} className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-ink-2">
-        <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.03]" loading="lazy" />
-        {sold && <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium backdrop-blur">Sold · made to order</span>}
-      </Link>
-      <div className="mt-4 flex items-start justify-between gap-3">
-        <Link href={`/shop/${item.slug}`} className="min-w-0">
-          <h3 className="truncate font-medium">{item.title}</h3>
-          <p className="mt-0.5 truncate text-sm text-muted">{item.size}</p>
-        </Link>
-        <span className="shrink-0 font-medium">{money(item.price)}</span>
+    <Link href={`/shop/${item.slug}`} className="press group block">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ink-2">
+        <img src={item.image} alt={item.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
+        {/* the real piece, revealed on hover */}
+        <img src={item.photo} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       </div>
-      <div className="mt-3 flex gap-2">
-        {!sold && (
-          <button onClick={() => buy(item)} className="btn btn-sm flex-1">
-            Buy now
-          </button>
-        )}
-        <Link href={`/build/${item.category}?from=${item.slug}`} className="btn btn-ghost btn-sm flex-1">
-          <Hammer size={14} /> {sold ? "Make one like it" : "Customize"}
-        </Link>
+      <div className="mt-3 flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
+        <h3 className="line-clamp-2 font-medium leading-snug">{item.title}</h3>
+        <span className="shrink-0 text-fg/90">{money(item.price)}</span>
       </div>
-    </div>
+      <p className="mt-0.5 truncate text-sm text-muted">{sold ? "Made to order" : item.size}</p>
+    </Link>
   );
 }
 
@@ -72,7 +60,7 @@ export function ConceptCard({ c }: { c: Concept }) {
 export function AddToCartButton({ item }: { item: ShopItem }) {
   const buy = useBuyNow();
   return (
-    <button onClick={() => buy(item, false)} className="btn btn-ghost h-14 flex-1">
+    <button onClick={() => buy(item, false)} className="btn btn-ghost h-14">
       <ShoppingBag size={16} /> Add to cart
     </button>
   );
@@ -80,8 +68,8 @@ export function AddToCartButton({ item }: { item: ShopItem }) {
 export function BuyNowButton({ item }: { item: ShopItem }) {
   const buy = useBuyNow();
   return (
-    <button onClick={() => buy(item)} className="btn h-14 flex-1">
-      <Zap size={16} /> Buy now · {money(item.price)}
+    <button onClick={() => buy(item)} className="btn h-14">
+      Buy now · {money(item.price)}
     </button>
   );
 }

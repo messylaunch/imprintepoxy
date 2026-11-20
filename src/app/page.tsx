@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero";
 import { ShopCard, ConceptCard } from "@/components/cards";
 import { PieceTiles } from "@/components/piece-tiles";
 import { Faq } from "@/components/faq";
+import { ContactBlock, ContactButtons } from "@/components/contact";
 import { SHOP, CONCEPTS } from "@/lib/catalog";
 
 export default function Home() {
@@ -77,7 +78,9 @@ export default function Home() {
         <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
           <div>
             <h2 className="font-display text-4xl md:text-5xl">Questions</h2>
-            <p className="mt-3 max-w-xs text-muted">Anything else, tap the chat bubble. A real person answers.</p>
+            <p className="mt-3 max-w-xs text-muted">Don&apos;t see yours? Call, text or email us, or use the chat bubble. A real person answers.</p>
+            <ContactButtons size="sm" className="mt-6" />
+            <ContactBlock title="" className="mt-5" />
           </div>
           <Faq />
         </div>
